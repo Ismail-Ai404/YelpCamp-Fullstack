@@ -1,0 +1,33 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="en">
+     <head>
+          <meta charset="UTF-8" />
+          <title><%= campground.title %></title>
+     </head>
+     <body>
+          <h1><%= campground.title %></h1>
+          <p><strong>Location:</strong> <%= campground.location %></p>
+          <!-- Add more fields if available, e.g., description, price, images -->
+          <% if(campground.description) { %>
+          <p><strong>Description:</strong> <%= campground.description %></p>
+          <% } %> <% if(campground.price) { %>
+          <p><strong>Price:</strong> $<%= campground.price %></p>
+          <% } %>
+
+          <p><a href="/campgrounds">Back to All Campgrounds</a></p>
+          <p>
+               <a href="/campgrounds/<%= campground._id %>/edit"
+                    >Edit Campground</a
+               >
+          </p>
+          <form
+               action="/campgrounds/<%= campground._id %>?_method=DELETE"
+               method="POST"
+               style="display: inline"
+          >
+               <button type="submit">Delete Campground</button>
+          </form>
+     </body>
+</html>

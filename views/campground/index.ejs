@@ -1,0 +1,25 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="en">
+     <head>
+          <meta charset="UTF-8" />
+          <title>All Campgrounds</title>
+     </head>
+     <body>
+          <h1>All Campgrounds</h1>
+
+          <a href="/campgrounds/new">Add New Campground</a>
+
+          <ul>
+               <% campgrounds.forEach(camp => { %>
+               <li>
+                    <a href="/campgrounds/<%= camp._id %>">
+                         <strong><%= camp.title %></strong> - <%= camp.location
+                         %>
+                    </a>
+               </li>
+               <% }) %>
+          </ul>
+     </body>
+</html>
