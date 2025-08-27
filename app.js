@@ -6,16 +6,10 @@ const mongoose = require("mongoose");
 const Campground = require("./models/campground");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
+const session = require("express-session");
+const flash = require("connect-flash");
 
 const app = express();
-
-app.use(express.urlencoded({ extended: true })); // to parse form data
-app.use(methodOverride("_method")); // looks for ?_method=PUT in form action
-
-app.set("view engine", "ejs");
-app.engine("ejs", ejsMate); // use ejs-mate for layouts
-
-app.set("views", path.join(__dirname, "views"));
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp");
 
@@ -25,91 +19,136 @@ db.once("open", () => {
      console.log("Database connected");
 });
 
-app.get("/", (req, res) => {
-     res.send("jj");
+// View engine setup
+app.engine("ejs", ejsMate); // layouts support
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+// Middleware
+app.use(express.urlencoded({ extended: true })); // parse form data
+app.use(methodOverride("_method"));
+
+app.use(
+     session({
+          secret: "thisshouldbeabettersecret!",
+          resave: false,
+          saveUninitialized: true,
+     })
+);
+app.use(flash());
+
+// Flash middleware for all views
+app.use((req, res, next) => {
+     res.locals.success = req.flash("success");
+     res.locals.error = req.flash("error");
+     next();
 });
 
-// Route to show all campgrounds
+// Root route
+app.get("/", (req, res) => {
+     res.send("Welcome to YelpCamp!");
+});
+
+// Index route - show all campgrounds
 app.get("/campgrounds", async (req, res) => {
      try {
           const campgrounds = await Campground.find({});
           res.render("campground/index", { campgrounds });
      } catch (err) {
           console.error(err);
-          res.send("Error fetching campgrounds");
+          req.flash("error", "Error fetching campgrounds.");
+          res.redirect("/");
      }
 });
 
-// Form to create a new campground
+// New campground form
 app.get("/campgrounds/new", (req, res) => {
      res.render("campground/new");
 });
 
-// Create a new campground
+// Create campground
 app.post("/campgrounds", async (req, res) => {
-     const { title, location, description, price } = req.body;
-     const campground = new Campground({
-          title,
-          location,
-          description,
-          price,
-          image,
-     });
-     await campground.save();
-     res.redirect(`/campgrounds/${campground._id}`); // go to the new campground page
+     const { title, location, description, price, image } = req.body;
+     try {
+          const campground = new Campground({
+               title,
+               location,
+               description,
+               price,
+               image,
+          });
+          await campground.save();
+          req.flash("success", "Campground created successfully!");
+          res.redirect(`/campgrounds/${campground._id}`);
+     } catch (err) {
+          console.error(err);
+          req.flash("error", "Failed to create campground.");
+          res.redirect("/campgrounds");
+     }
 });
 
-// Show route for a single campground
+// Show single campground
 app.get("/campgrounds/:id", async (req, res) => {
      const { id } = req.params;
      try {
           const campground = await Campground.findById(id);
           if (!campground) {
-               return res.send("Campground not found");
+               req.flash("error", "Campground not found.");
+               return res.redirect("/campgrounds");
           }
           res.render("campground/show", { campground });
      } catch (err) {
           console.error(err);
-          res.send("Error fetching campground");
+          req.flash("error", "Error fetching campground.");
+          res.redirect("/campgrounds");
      }
 });
 
-// Show form to edit campground
+// Edit campground form
 app.get("/campgrounds/:id/edit", async (req, res) => {
      const { id } = req.params;
      const campground = await Campground.findById(id);
-     if (!campground) return res.send("Campground not found");
+     if (!campground) {
+          req.flash("error", "Campground not found.");
+          return res.redirect("/campgrounds");
+     }
      res.render("campground/edit", { campground });
 });
 
 // Update campground
 app.put("/campgrounds/:id", async (req, res) => {
      const { id } = req.params;
-     const { title, location, description, price } = req.body;
+     const { title, location, description, price, image } = req.body;
      try {
           const campground = await Campground.findByIdAndUpdate(
                id,
-               { title, location, description, price },
+               { title, location, description, price, image },
                { new: true }
           );
+          req.flash("success", "Campground updated successfully!");
           res.redirect(`/campgrounds/${campground._id}`);
      } catch (err) {
           console.error(err);
-          res.send("Error updating campground");
+          req.flash("error", "Error updating campground.");
+          res.redirect("/campgrounds");
      }
 });
+
 // Delete campground
 app.delete("/campgrounds/:id", async (req, res) => {
      const { id } = req.params;
      try {
           await Campground.findByIdAndDelete(id);
-          res.redirect("/campgrounds"); // go back to all campgrounds
+          req.flash("success", "Campground deleted successfully!");
+          res.redirect("/campgrounds");
      } catch (err) {
           console.error(err);
-          res.send("Error deleting campground");
+          req.flash("error", "Error deleting campground.");
+          res.redirect("/campgrounds");
      }
 });
 
+// Server start
 app.listen(3000, () => {
      console.log("Serving on port 3000");
 });

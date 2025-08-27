@@ -30,14 +30,15 @@
                          <% } %>
 
                          <h5 class="card-title"><%= camp.title %></h5>
-                         <p class="card-text text-muted mb-1">
-                              <%= camp.location %>
-                         </p>
                          <% if (camp.description) { %>
-                         <p class="card-text">
+                         <p class="card-text mb-2">
                               <%= camp.description.substring(0, 200) %>...
                          </p>
                          <% } %>
+                         <p class="card-text text-muted mb-1">
+                              <%= camp.location %>
+                         </p>
+
                          <a
                               href="/campgrounds/<%= camp._id %>"
                               class="btn btn-primary"
