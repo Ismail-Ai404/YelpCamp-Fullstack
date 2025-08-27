@@ -19,7 +19,16 @@
 
                <!-- Content -->
                <div class="col-md-8">
-                    <div class="card-body">
+                    <div class="card-body position-relative">
+                         <!-- Price Badge -->
+                         <% if (camp.price) { %>
+                         <span
+                              class="badge bg-success position-absolute top-0 end-0 m-2 fs-6"
+                         >
+                              $<%= camp.price %>
+                         </span>
+                         <% } %>
+
                          <h5 class="card-title"><%= camp.title %></h5>
                          <p class="card-text text-muted mb-1">
                               <%= camp.location %>
@@ -33,7 +42,7 @@
                               href="/campgrounds/<%= camp._id %>"
                               class="btn btn-primary"
                          >
-                              View Campground
+                              View <%= camp.title %>
                          </a>
                     </div>
                </div>
