@@ -5,7 +5,9 @@
 <h1><%= campground.title %></h1>
 <p><strong>Location:</strong> <%= campground.location %></p>
 <!-- Add more fields if available, e.g., description, price, images -->
-<% if(campground.description) { %>
+<% if(campground.image) { %>
+<img src="<%= campground.image%>" alt="" />
+<% } %> <% if(campground.description) { %>
 <p><strong>Description:</strong> <%= campground.description %></p>
 <% } %> <% if(campground.price) { %>
 <p><strong>Price:</strong> $<%= campground.price %></p>
