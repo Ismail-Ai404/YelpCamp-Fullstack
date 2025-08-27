@@ -5,6 +5,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const Campground = require("./models/campground");
 const methodOverride = require("method-override");
+const ejsMate = require("ejs-mate");
 
 const app = express();
 
@@ -12,6 +13,8 @@ app.use(express.urlencoded({ extended: true })); // to parse form data
 app.use(methodOverride("_method")); // looks for ?_method=PUT in form action
 
 app.set("view engine", "ejs");
+app.engine("ejs", ejsMate); // use ejs-mate for layouts
+
 app.set("views", path.join(__dirname, "views"));
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp");
