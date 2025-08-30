@@ -8,6 +8,8 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const session = require("express-session");
 const flash = require("connect-flash");
+const ExpressError = require("./utils/ExpressError");
+const catchAsync = require("./utils/catchAsync");
 
 const app = express();
 
@@ -67,9 +69,11 @@ app.get("/campgrounds/new", (req, res) => {
 });
 
 // Create campground
-app.post("/campgrounds", async (req, res) => {
-     const { title, location, description, price, image } = req.body;
-     try {
+app.post(
+     "/campgrounds",
+     catchAsync(async (req, res) => {
+          const { title, location, description, price, image } = req.body;
+          // try {
           const campground = new Campground({
                title,
                location,
@@ -77,75 +81,103 @@ app.post("/campgrounds", async (req, res) => {
                price,
                image,
           });
+          if (!title || !location) {
+               throw new ExpressError("Invalid Camground Input", 400);
+          }
           await campground.save();
           req.flash("success", "Campground created successfully!");
           res.redirect(`/campgrounds/${campground._id}`);
-     } catch (err) {
-          console.error(err);
-          req.flash("error", "Failed to create campground.");
-          res.redirect("/campgrounds");
-     }
-});
+          // } catch (err) {
+          //      console.error(err);
+          //      req.flash("error", "Failed to create campground.");
+          //      res.redirect("/campgrounds");
+          // }
+     })
+);
 
 // Show single campground
-app.get("/campgrounds/:id", async (req, res) => {
-     const { id } = req.params;
-     try {
+app.get(
+     "/campgrounds/:id",
+     catchAsync(async (req, res) => {
+          const { id } = req.params;
+          try {
+               const campground = await Campground.findById(id);
+               if (!campground) {
+                    req.flash("error", "Campground not found.");
+                    // throw new ExpressError("Campground not found", 404);
+                    return res.redirect("/campgrounds");
+               }
+               res.render("campground/show", { campground });
+          } catch (err) {
+               console.error(err);
+               req.flash("error", "Error fetching campground.");
+               res.redirect("/campgrounds");
+          }
+     })
+);
+
+// Edit campground form
+app.get(
+     "/campgrounds/:id/edit",
+     catchAsync(async (req, res) => {
+          const { id } = req.params;
           const campground = await Campground.findById(id);
           if (!campground) {
                req.flash("error", "Campground not found.");
                return res.redirect("/campgrounds");
           }
-          res.render("campground/show", { campground });
-     } catch (err) {
-          console.error(err);
-          req.flash("error", "Error fetching campground.");
-          res.redirect("/campgrounds");
-     }
-});
-
-// Edit campground form
-app.get("/campgrounds/:id/edit", async (req, res) => {
-     const { id } = req.params;
-     const campground = await Campground.findById(id);
-     if (!campground) {
-          req.flash("error", "Campground not found.");
-          return res.redirect("/campgrounds");
-     }
-     res.render("campground/edit", { campground });
-});
+          res.render("campground/edit", { campground });
+     })
+);
 
 // Update campground
-app.put("/campgrounds/:id", async (req, res) => {
-     const { id } = req.params;
-     const { title, location, description, price, image } = req.body;
-     try {
-          const campground = await Campground.findByIdAndUpdate(
-               id,
-               { title, location, description, price, image },
-               { new: true }
-          );
-          req.flash("success", "Campground updated successfully!");
-          res.redirect(`/campgrounds/${campground._id}`);
-     } catch (err) {
-          console.error(err);
-          req.flash("error", "Error updating campground.");
-          res.redirect("/campgrounds");
-     }
-});
+app.put(
+     "/campgrounds/:id",
+     catchAsync(async (req, res) => {
+          const { id } = req.params;
+          const { title, location, description, price, image } = req.body;
+          try {
+               const campground = await Campground.findByIdAndUpdate(
+                    id,
+                    { title, location, description, price, image },
+                    { new: true }
+               );
+               req.flash("success", "Campground updated successfully!");
+               res.redirect(`/campgrounds/${campground._id}`);
+          } catch (err) {
+               console.error(err);
+               req.flash("error", "Error updating campground.");
+               res.redirect("/campgrounds");
+          }
+     })
+);
 
 // Delete campground
-app.delete("/campgrounds/:id", async (req, res) => {
-     const { id } = req.params;
-     try {
-          await Campground.findByIdAndDelete(id);
-          req.flash("success", "Campground deleted successfully!");
-          res.redirect("/campgrounds");
-     } catch (err) {
-          console.error(err);
-          req.flash("error", "Error deleting campground.");
-          res.redirect("/campgrounds");
-     }
+app.delete(
+     "/campgrounds/:id",
+     catchAsync(async (req, res) => {
+          const { id } = req.params;
+          try {
+               await Campground.findByIdAndDelete(id);
+               req.flash("success", "Campground deleted successfully!");
+               res.redirect("/campgrounds");
+          } catch (err) {
+               console.error(err);
+               req.flash("error", "Error deleting campground.");
+               res.redirect("/campgrounds");
+          }
+     })
+);
+
+// Catch-all handler (404)
+app.all(/.*/, (req, res, next) => {
+     next(new ExpressError("Page Not Found", 404));
+});
+
+app.use((err, req, res, next) => {
+     console.log(err);
+     const { statusCode = 500, message = "Something went wrong" } = err;
+     res.status(statusCode).send(message);
 });
 
 // Server start
