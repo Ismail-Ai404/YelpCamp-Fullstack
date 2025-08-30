@@ -7,6 +7,8 @@ const Campground = require("./models/campground");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const session = require("express-session");
+const Joy = require("joi");
+const { campgroundSchema } = require("./schemas");
 const flash = require("connect-flash");
 const ExpressError = require("./utils/ExpressError");
 const catchAsync = require("./utils/catchAsync");
@@ -29,6 +31,15 @@ app.set("views", path.join(__dirname, "views"));
 // Middleware
 app.use(express.urlencoded({ extended: true })); // parse form data
 app.use(methodOverride("_method"));
+
+function validateCampground(req, res, next) {
+     const { error } = campgroundSchema.validate(req.body);
+     if (error) {
+          const msg = error.details.map((d) => d.message).join(", ");
+          req.flash("error", msg);
+          throw new ExpressError(msg, 400);
+     } else next();
+}
 
 app.use(
      session({
@@ -71,6 +82,7 @@ app.get("/campgrounds/new", (req, res) => {
 // Create campground
 app.post(
      "/campgrounds",
+     validateCampground,
      catchAsync(async (req, res) => {
           const { title, location, description, price, image } = req.body;
           // try {
@@ -81,9 +93,9 @@ app.post(
                price,
                image,
           });
-          if (!title || !location) {
-               throw new ExpressError("Invalid Camground Input", 400);
-          }
+          // if (!title || !location) {
+          //      throw new ExpressError("Invalid Camground Input", 400);
+          // }
           await campground.save();
           req.flash("success", "Campground created successfully!");
           res.redirect(`/campgrounds/${campground._id}`);
@@ -119,6 +131,8 @@ app.get(
 // Edit campground form
 app.get(
      "/campgrounds/:id/edit",
+     validateCampground,
+
      catchAsync(async (req, res) => {
           const { id } = req.params;
           const campground = await Campground.findById(id);
@@ -176,8 +190,9 @@ app.all(/.*/, (req, res, next) => {
 
 app.use((err, req, res, next) => {
      console.log(err);
-     const { statusCode = 500, message = "Something went wrong" } = err;
-     res.status(statusCode).send(message);
+     const { statusCode = 500 } = err;
+     if (!err.message) err.message = "Something went wrong! ";
+     res.status(statusCode).render("error", { err });
 });
 
 // Server start
