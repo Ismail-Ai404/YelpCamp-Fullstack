@@ -8,7 +8,8 @@
      <form
           action="/campgrounds/<%= campground._id %>?_method=PUT"
           method="POST"
-          class="card shadow-sm p-4"
+          class="card shadow-sm p-4 needs-validation"
+          novalidate
      >
           <!-- Title -->
           <div class="mb-3">
@@ -48,6 +49,7 @@
                     class="form-control"
                     value="<%= campground.image %>"
                     placeholder="https://example.com/image.jpg"
+                    required
                />
           </div>
 
@@ -60,6 +62,7 @@
                     class="form-control"
                     rows="4"
                     placeholder="Write a short description"
+                    required
                >
 <%= campground.description %></textarea
                >
@@ -79,6 +82,7 @@
                          value="<%= campground.price %>"
                          min="0"
                          placeholder="0.00"
+                         required
                     />
                </div>
           </div>

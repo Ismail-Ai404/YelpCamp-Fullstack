@@ -4,7 +4,12 @@
 <div class="container mt-4">
      <h1 class="mb-4">Add a New Campground</h1>
 
-     <form action="/campgrounds" method="POST" class="card shadow-sm p-4">
+     <form
+          action="/campgrounds"
+          method="POST"
+          class="card shadow-sm p-4 needs-validation"
+          novalidate
+     >
           <!-- Title -->
           <div class="mb-3">
                <label for="title" class="form-label">Title</label>
@@ -40,6 +45,7 @@
                     id="image"
                     class="form-control"
                     placeholder="https://example.com/image.jpg"
+                    required
                />
           </div>
 
@@ -52,6 +58,7 @@
                     class="form-control"
                     rows="4"
                     placeholder="Write a short description"
+                    required
                ></textarea>
           </div>
 
@@ -68,6 +75,7 @@
                          min="0"
                          class="form-control"
                          placeholder="0.00"
+                         required
                     />
                </div>
           </div>
