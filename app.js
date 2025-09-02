@@ -11,6 +11,7 @@ const { campgroundSchema } = require("./schemas");
 const flash = require("connect-flash");
 const ExpressError = require("./utils/ExpressError");
 const catchAsync = require("./utils/catchAsync");
+const Review = require("./models/review");
 
 const app = express();
 
@@ -179,6 +180,24 @@ app.delete(
                req.flash("error", "Error deleting campground.");
                res.redirect("/campgrounds");
           }
+     })
+);
+
+app.post(
+     "/camgrounds/:id/reviews",
+     catchAsync(async (req, res) => {
+          const { id } = req.params;
+          const campground = await Campground.findById(id);
+          if (!campground) {
+               req.flash("error", "Campground not Found");
+               return res.redirect("/campgrounds");
+          }
+          const review = new Review(req.body.review);
+          campground.reviews.push(review);
+          await review.save();
+          await campground.save();
+          req.flash("success", "Review has been added");
+          res.redirect(`/campgorunds/${campground._id}`);
      })
 );
 

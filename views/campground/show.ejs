@@ -57,6 +57,65 @@
                          </button>
                     </form>
                </div>
+
+               <!-- Rating Form -->
+               <div class="card shadow-sm mb-4 mt-4">
+                    <div class="card-body">
+                         <h4 class="card-title mb-3">Leave a Rating</h4>
+                         <form
+                              action="/campgrounds/<%= campground._id %>/reviews"
+                              method="POST"
+                              novalidate
+                              class="needs-validation"
+                         >
+                              <!-- Rating -->
+                              <div class="mb-3">
+                                   <label for="rating" class="form-label"
+                                        >Rating</label
+                                   >
+                                   <select
+                                        class="form-select"
+                                        id="rating"
+                                        name="review[rating]"
+                                        required
+                                   >
+                                        <option value="" disabled selected>
+                                             Choose...
+                                        </option>
+                                        <option value="1">⭐ 1 - Poor</option>
+                                        <option value="2">⭐⭐ 2 - Fair</option>
+                                        <option value="3">
+                                             ⭐⭐⭐ 3 - Good
+                                        </option>
+                                        <option value="4">
+                                             ⭐⭐⭐⭐ 4 - Very Good
+                                        </option>
+                                        <option value="5">
+                                             ⭐⭐⭐⭐⭐ 5 - Excellent
+                                        </option>
+                                   </select>
+                              </div>
+
+                              <!-- Review -->
+                              <div class="mb-3">
+                                   <label for="review" class="form-label"
+                                        >Your Review</label
+                                   >
+                                   <textarea
+                                        class="form-control"
+                                        id="review"
+                                        name="review[body]"
+                                        rows="3"
+                                        placeholder="Write something about this campground..."
+                                   ></textarea>
+                              </div>
+
+                              <button type="submit" class="btn btn-success">
+                                   Submit Review
+                              </button>
+                         </form>
+                    </div>
+               </div>
           </div>
      </div>
 </div>
