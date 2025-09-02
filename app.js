@@ -7,7 +7,6 @@ const Campground = require("./models/campground");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const session = require("express-session");
-const Joy = require("joi");
 const { campgroundSchema } = require("./schemas");
 const flash = require("connect-flash");
 const ExpressError = require("./utils/ExpressError");
@@ -36,7 +35,7 @@ function validateCampground(req, res, next) {
      const { error } = campgroundSchema.validate(req.body);
      if (error) {
           const msg = error.details.map((d) => d.message).join(", ");
-          req.flash("error", msg);
+          // req.flash("error", msg);
           throw new ExpressError(msg, 400);
      } else next();
 }
@@ -131,7 +130,6 @@ app.get(
 // Edit campground form
 app.get(
      "/campgrounds/:id/edit",
-     validateCampground,
 
      catchAsync(async (req, res) => {
           const { id } = req.params;
@@ -147,6 +145,7 @@ app.get(
 // Update campground
 app.put(
      "/campgrounds/:id",
+     validateCampground,
      catchAsync(async (req, res) => {
           const { id } = req.params;
           const { title, location, description, price, image } = req.body;
