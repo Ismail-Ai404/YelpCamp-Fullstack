@@ -1,92 +1,121 @@
 <!-- @format -->
 <% layout("layouts/boilerplate") %>
 
-<div class="container mt-4">
-     <h1 class="mb-4">Add a New Campground</h1>
+<div class="container mt-5">
+     <div class="card shadow-lg border-0 rounded-4 p-4">
+          <h1 class="mb-4 text-center fw-bold">
+               <i class="bi bi-tree-fill text-success me-2"></i>
+               Add a New Campground
+          </h1>
 
-     <form
-          action="/campgrounds"
-          method="POST"
-          class="card shadow-sm p-4 needs-validation"
-          novalidate
-     >
-          <!-- Title -->
-          <div class="mb-3">
-               <label for="title" class="form-label">Title</label>
-               <input
-                    type="text"
-                    name="title"
-                    id="title"
-                    class="form-control"
-                    placeholder="Enter campground title"
-                    required
-               />
-          </div>
-
-          <!-- Location -->
-          <div class="mb-3">
-               <label for="location" class="form-label">Location</label>
-               <input
-                    type="text"
-                    name="location"
-                    id="location"
-                    class="form-control"
-                    placeholder="City, Division"
-                    required
-               />
-          </div>
-
-          <!-- Image URL -->
-          <div class="mb-3">
-               <label for="image" class="form-label">Image URL</label>
-               <input
-                    type="url"
-                    name="image"
-                    id="image"
-                    class="form-control"
-                    placeholder="https://example.com/image.jpg"
-                    required
-               />
-          </div>
-
-          <!-- Description -->
-          <div class="mb-3">
-               <label for="description" class="form-label">Description</label>
-               <textarea
-                    name="description"
-                    id="description"
-                    class="form-control"
-                    rows="4"
-                    placeholder="Write a short description"
-                    required
-               ></textarea>
-          </div>
-
-          <!-- Price -->
-          <div class="mb-3">
-               <label for="price" class="form-label">Price</label>
-               <div class="input-group">
-                    <span class="input-group-text">$</span>
+          <form
+               action="/campgrounds"
+               method="POST"
+               class="needs-validation"
+               novalidate
+          >
+               <!-- Title -->
+               <div class="mb-3">
+                    <label for="title" class="form-label fw-semibold">
+                         <i class="bi bi-type me-1 text-primary"></i> Title
+                    </label>
                     <input
                          type="text"
-                         name="price"
-                         id="price"
-                         step="0.01"
-                         class="form-control"
-                         placeholder="0.00"
+                         name="title"
+                         id="title"
+                         class="form-control rounded-3 shadow-sm"
+                         placeholder="Enter campground title"
                          required
                     />
                </div>
-          </div>
 
-          <!-- Submit -->
-          <div class="d-flex justify-content-between mt-4">
-               <button type="submit" class="btn btn-success px-4">
-                    <i class="bi bi-plus-circle"></i> Create Campground
-               </button>
-               <a href="/campgrounds" class="btn btn-outline-secondary px-4">
-                    Cancel
-               </a>
-          </div>
-     </form>
+               <!-- Location -->
+               <div class="mb-3">
+                    <label for="location" class="form-label fw-semibold">
+                         <i class="bi bi-geo-alt-fill me-1 text-danger"></i>
+                         Location
+                    </label>
+                    <input
+                         type="text"
+                         name="location"
+                         id="location"
+                         class="form-control rounded-3 shadow-sm"
+                         placeholder="City, Division"
+                         required
+                    />
+               </div>
+
+               <!-- Image URL -->
+               <div class="mb-3">
+                    <label for="image" class="form-label fw-semibold">
+                         <i class="bi bi-image-fill me-1 text-warning"></i>
+                         Image URL
+                    </label>
+                    <input
+                         type="url"
+                         name="image"
+                         id="image"
+                         class="form-control rounded-3 shadow-sm"
+                         placeholder="https://example.com/image.jpg"
+                         required
+                    />
+               </div>
+
+               <!-- Description -->
+               <div class="mb-3">
+                    <label for="description" class="form-label fw-semibold">
+                         <i class="bi bi-pencil-square me-1 text-info"></i>
+                         Description
+                    </label>
+                    <textarea
+                         name="description"
+                         id="description"
+                         class="form-control rounded-3 shadow-sm"
+                         rows="4"
+                         placeholder="Write a short description"
+                         required
+                    ></textarea>
+               </div>
+
+               <!-- Price -->
+               <div class="mb-3">
+                    <label for="price" class="form-label fw-semibold">
+                         <i class="bi bi-cash-stack me-1 text-success"></i>
+                         Price
+                    </label>
+                    <div class="input-group shadow-sm rounded-3">
+                         <span
+                              class="input-group-text bg-light border-0 rounded-start"
+                              >$</span
+                         >
+                         <input
+                              type="text"
+                              name="price"
+                              id="price"
+                              step="0.01"
+                              class="form-control border-0"
+                              placeholder="0.00"
+                              required
+                         />
+                    </div>
+               </div>
+
+               <!-- Submit -->
+               <div class="d-flex justify-content-between mt-4">
+                    <button
+                         type="submit"
+                         class="btn btn-success px-4 shadow-sm rounded-3"
+                    >
+                         <i class="bi bi-plus-circle me-1"></i> Create
+                         Campground
+                    </button>
+                    <a
+                         href="/campgrounds"
+                         class="btn btn-outline-secondary px-4 shadow-sm rounded-3"
+                    >
+                         <i class="bi bi-x-circle me-1"></i> Cancel
+                    </a>
+               </div>
+          </form>
+     </div>
 </div>

@@ -32,6 +32,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true })); // parse form data
 app.use(methodOverride("_method"));
 
+// Validation middleware
 function validateCampground(req, res, next) {
      const { error } = campgroundSchema.validate(req.body);
      if (error) {
@@ -43,7 +44,7 @@ function validateCampground(req, res, next) {
 
 function validateReview(req, res, next) {
      const { error } = reviewSchema.validate(req.body);
-     if (erroe) {
+     if (error) {
           const msg = error.details.map((d) => d.message).join(", ");
           // req.flash("error", msg);
           throw new ExpressError(msg, 400);
@@ -122,7 +123,9 @@ app.get(
      catchAsync(async (req, res) => {
           const { id } = req.params;
           try {
-               const campground = await Campground.findById(id);
+               const campground = await Campground.findById(id).populate(
+                    "reviews"
+               );
                if (!campground) {
                     req.flash("error", "Campground not found.");
                     // throw new ExpressError("Campground not found", 404);
@@ -175,20 +178,17 @@ app.put(
      })
 );
 
-// Delete campground
+//Express route for deleting a campground
 app.delete(
      "/campgrounds/:id",
      catchAsync(async (req, res) => {
-          const { id } = req.params;
-          try {
-               await Campground.findByIdAndDelete(id);
-               req.flash("success", "Campground deleted successfully!");
-               res.redirect("/campgrounds");
-          } catch (err) {
-               console.error(err);
-               req.flash("error", "Error deleting campground.");
-               res.redirect("/campgrounds");
-          }
+          // This one command will now trigger the middleware
+          await Campground.findByIdAndDelete(req.params.id);
+          req.flash(
+               "success",
+               "Campground and all its reviews deleted successfully!"
+          );
+          res.redirect("/campgrounds");
      })
 );
 
@@ -208,6 +208,24 @@ app.post(
           await review.save();
           await campground.save();
           req.flash("success", "Review has been added");
+          res.redirect(`/campgrounds/${campground._id}`);
+     })
+);
+
+// Delete Review
+app.delete(
+     "/campgrounds/:id/reviews/:reviewId",
+     catchAsync(async (req, res) => {
+          const { id, reviewId } = req.params;
+          const campground = await Campground.findByIdAndUpdate(id, {
+               $pull: { reviews: reviewId },
+          });
+          if (!campground) {
+               req.flash("error", "Campground not found.");
+               return res.redirect("/campgrounds");
+          }
+          await Review.findByIdAndDelete(reviewId);
+          req.flash("success", "Review deleted successfully!");
           res.redirect(`/campgrounds/${campground._id}`);
      })
 );
