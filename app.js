@@ -27,7 +27,9 @@ db.once("open", () => {
 // View engine setup
 app.engine("ejs", ejsMate); // layouts support
 app.set("view engine", "ejs");
+
 app.set("views", path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Middleware
 app.use(express.urlencoded({ extended: true })); // parse form data
