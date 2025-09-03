@@ -12,6 +12,7 @@ const flash = require("connect-flash");
 const ExpressError = require("./utils/ExpressError");
 const catchAsync = require("./utils/catchAsync");
 const Review = require("./models/review");
+const campgroundRoutes = require("./routes/campgrounds");
 
 const app = express();
 
@@ -33,14 +34,6 @@ app.use(express.urlencoded({ extended: true })); // parse form data
 app.use(methodOverride("_method"));
 
 // Validation middleware
-function validateCampground(req, res, next) {
-     const { error } = campgroundSchema.validate(req.body);
-     if (error) {
-          const msg = error.details.map((d) => d.message).join(", ");
-          // req.flash("error", msg);
-          throw new ExpressError(msg, 400);
-     } else next();
-}
 
 function validateReview(req, res, next) {
      const { error } = reviewSchema.validate(req.body);
@@ -72,125 +65,7 @@ app.get("/", (req, res) => {
      res.send("Welcome to YelpCamp!");
 });
 
-// Index route - show all campgrounds
-app.get("/campgrounds", async (req, res) => {
-     try {
-          const campgrounds = await Campground.find({});
-          res.render("campground/index", { campgrounds });
-     } catch (err) {
-          console.error(err);
-          req.flash("error", "Error fetching campgrounds.");
-          res.redirect("/");
-     }
-});
-
-// New campground form
-app.get("/campgrounds/new", (req, res) => {
-     res.render("campground/new");
-});
-
-// Create campground
-app.post(
-     "/campgrounds",
-     validateCampground,
-     catchAsync(async (req, res) => {
-          const { title, location, description, price, image } = req.body;
-          // try {
-          const campground = new Campground({
-               title,
-               location,
-               description,
-               price,
-               image,
-          });
-          // if (!title || !location) {
-          //      throw new ExpressError("Invalid Camground Input", 400);
-          // }
-          await campground.save();
-          req.flash("success", "Campground created successfully!");
-          res.redirect(`/campgrounds/${campground._id}`);
-          // } catch (err) {
-          //      console.error(err);
-          //      req.flash("error", "Failed to create campground.");
-          //      res.redirect("/campgrounds");
-          // }
-     })
-);
-
-// Show single campground
-app.get(
-     "/campgrounds/:id",
-     catchAsync(async (req, res) => {
-          const { id } = req.params;
-          try {
-               const campground = await Campground.findById(id).populate(
-                    "reviews"
-               );
-               if (!campground) {
-                    req.flash("error", "Campground not found.");
-                    // throw new ExpressError("Campground not found", 404);
-                    return res.redirect("/campgrounds");
-               }
-               res.render("campground/show", { campground });
-          } catch (err) {
-               console.error(err);
-               req.flash("error", "Error fetching campground.");
-               res.redirect("/campgrounds");
-          }
-     })
-);
-
-// Edit campground form
-app.get(
-     "/campgrounds/:id/edit",
-
-     catchAsync(async (req, res) => {
-          const { id } = req.params;
-          const campground = await Campground.findById(id);
-          if (!campground) {
-               req.flash("error", "Campground not found.");
-               return res.redirect("/campgrounds");
-          }
-          res.render("campground/edit", { campground });
-     })
-);
-
-// Update campground
-app.put(
-     "/campgrounds/:id",
-     validateCampground,
-     catchAsync(async (req, res) => {
-          const { id } = req.params;
-          const { title, location, description, price, image } = req.body;
-          try {
-               const campground = await Campground.findByIdAndUpdate(
-                    id,
-                    { title, location, description, price, image },
-                    { new: true }
-               );
-               req.flash("success", "Campground updated successfully!");
-               res.redirect(`/campgrounds/${campground._id}`);
-          } catch (err) {
-               console.error(err);
-               req.flash("error", "Error updating campground.");
-               res.redirect("/campgrounds");
-          }
-     })
-);
-
-//Express route for deleting a campground
-app.delete(
-     "/campgrounds/:id",
-     catchAsync(async (req, res) => {
-          // This one command will now trigger the middleware
-          await Campground.findByIdAndDelete(req.params.id);
-          req.flash(
-               "success",
-               "Campground and all its reviews deleted successfully!"
-          );
-          res.redirect("/campgrounds");
-     })
-);
+app.use("/campgrounds", campgroundRoutes);
 
 // Create review
 app.post(

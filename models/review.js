@@ -9,6 +9,4 @@ const reviewSchema = new Schema({
      rating: Number,
 });
 
-//middleware to delete camground
-
 module.exports = mongoose.model("Review", reviewSchema);
