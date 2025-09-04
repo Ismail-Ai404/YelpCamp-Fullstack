@@ -67,7 +67,10 @@ app.get("/", (req, res) => {
      res.send("Welcome to YelpCamp!");
 });
 
+// Campground routes
 app.use("/campgrounds", campgroundRoutes);
+
+// Review routes
 app.use("/campgrounds/:id/reviews", reviewRoutes);
 
 // Catch-all handler (404)
