@@ -17,7 +17,12 @@ const ExpressError = require("./utils/ExpressError");
 
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
+const authRoutes = require("./routes/auths");
 const { Session } = require("inspector/promises");
+
+const User = require("./models/user");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
 
 const app = express();
 
@@ -53,6 +58,10 @@ const sessionConfig = {
 
 app.use(session(sessionConfig));
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
 app.use(flash());
 
 // Flash middleware for all views
@@ -66,6 +75,14 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
      res.send("Welcome to YelpCamp!");
 });
+
+app.get("/fakeuser", async (req, res) => {
+     const user = new User({ email: "ayon@gmail.com", username: "ayon" });
+     const newUser = await User.register(user, "chicken");
+     res.send(newUser);
+});
+
+app.use("/", authRoutes);
 
 // Campground routes
 app.use("/campgrounds", campgroundRoutes);
