@@ -2,13 +2,15 @@
 
 const express = require("express");
 const router = express.Router({ mergeParams: true });
-const { reviewSchema } = require("../schemas");
+const { reviewSchema } = require("../middleware/joiSchemas");
 
 const Review = require("../models/review");
 const Campground = require("../models/campground");
 
 const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");
+
+const { isLoggedIn } = require("../middleware/login");
 
 // Validation middleware
 function validateReview(req, res, next) {

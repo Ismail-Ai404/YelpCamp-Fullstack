@@ -41,12 +41,13 @@ router.get("/login", (req, res) => {
 router.post(
      "/login",
      passport.authenticate("local", {
-          successRedirect: "/campgrounds",
+          // successRedirect: "/campgrounds",
           failureRedirect: "/login",
           failureFlash: true,
      }),
      (req, res) => {
           req.flash("success", "Welcome Back!");
+          res.redirect("/campgrounds");
      }
 );
 

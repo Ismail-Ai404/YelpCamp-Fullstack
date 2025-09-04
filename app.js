@@ -64,6 +64,11 @@ passport.use(new LocalStrategy(User.authenticate()));
 
 app.use(flash());
 
+// NEW: Serialize/Deserialize user (fixes the session error)
+// These use the built-in methods from passport-local-mongoose
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 // Flash middleware for all views
 app.use((req, res, next) => {
      res.locals.success = req.flash("success");
