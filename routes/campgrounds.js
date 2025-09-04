@@ -20,11 +20,10 @@ function validateCampground(req, res, next) {
 
 // Index route - show all campgrounds
 router.get("/", async (req, res) => {
-     try {
-          const campgrounds = await Campground.find({});
-          res.render("campground/index", { campgrounds });
-     } catch (err) {
-          console.error(err);
+     const campgrounds = await Campground.find({});
+     res.render("campground/index", { campgrounds });
+     if (!campgrounds) {
+          // console.error(err);
           req.flash("error", "Error fetching campgrounds.");
           res.redirect("/");
      }
@@ -52,14 +51,14 @@ router.post(
           // if (!title || !location) {
           //      throw new ExpressError("Invalid Camground Input", 400);
           // }
+          if (!campground) {
+               // console.error(err);
+               req.flash("error", "Failed to create campground.");
+               res.redirect("/campgrounds");
+          }
           await campground.save();
           req.flash("success", "Campground created successfully!");
           res.redirect(`/campgrounds/${campground._id}`);
-          // } catch (err) {
-          //      console.error(err);
-          //      req.flash("error", "Failed to create campground.");
-          //      res.redirect("/campgrounds");
-          // }
      })
 );
 
@@ -68,21 +67,15 @@ router.get(
      "/:id",
      catchAsync(async (req, res) => {
           const { id } = req.params;
-          try {
-               const campground = await Campground.findById(id).populate(
-                    "reviews"
-               );
-               if (!campground) {
-                    req.flash("error", "Campground not found.");
-                    // throw new ExpressError("Campground not found", 404);
-                    return res.redirect("/campgrounds");
-               }
-               res.render("campground/show", { campground });
-          } catch (err) {
-               console.error(err);
-               req.flash("error", "Error fetching campground.");
-               res.redirect("/campgrounds");
+
+          const campground = await Campground.findById(id).populate("reviews");
+          if (!campground) {
+               // console.error(err);
+               req.flash("error", "Campground not found.");
+               // throw new ExpressError("Campground not found", 404);
+               return res.redirect("/campgrounds");
           }
+          res.render("campground/show", { campground });
      })
 );
 
@@ -108,19 +101,19 @@ router.put(
      catchAsync(async (req, res) => {
           const { id } = req.params;
           const { title, location, description, price, image } = req.body;
-          try {
-               const campground = await Campground.findByIdAndUpdate(
-                    id,
-                    { title, location, description, price, image },
-                    { new: true }
-               );
-               req.flash("success", "Campground updated successfully!");
-               res.redirect(`/campgrounds/${campground._id}`);
-          } catch (err) {
-               console.error(err);
+
+          const campground = await Campground.findByIdAndUpdate(
+               id,
+               { title, location, description, price, image },
+               { new: true }
+          );
+          if (!campground) {
+               // console.error(err);
                req.flash("error", "Error updating campground.");
                res.redirect("/campgrounds");
           }
+          req.flash("success", "Campground updated successfully!");
+          res.redirect(`/campgrounds/${campground._id}`);
      })
 );
 
