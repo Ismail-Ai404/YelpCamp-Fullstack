@@ -69,10 +69,19 @@ app.use(flash());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Flash middleware for all views
+// Flash & isLoggedIn middleware for all views
 app.use((req, res, next) => {
+     // only store the url if it is not login or register
+     if (!["/login", "/"].includes(req.originalUrl)) {
+          req.session.returnTo = req.originalUrl;
+     }
+     // console.log("session: ", req.session.returnTo);
+     // console.log("locals: ", res.locals.returnTo);
+     // console.log(`originalUrl: ${req.originalUrl}\n\n\n`);
+
      res.locals.success = req.flash("success");
      res.locals.error = req.flash("error");
+     res.locals.currentUser = req.user;
      next();
 });
 

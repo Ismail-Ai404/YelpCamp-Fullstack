@@ -25,6 +25,7 @@ function validateReview(req, res, next) {
 // Create review
 router.post(
      "",
+     // isLoggedIn,
      validateReview,
      catchAsync(async (req, res) => {
           const { id } = req.params;
@@ -45,6 +46,7 @@ router.post(
 // Delete Review
 router.delete(
      "/:reviewId",
+     // isLoggedIn,
      catchAsync(async (req, res) => {
           const { id, reviewId } = req.params;
           const campground = await Campground.findByIdAndUpdate(id, {
