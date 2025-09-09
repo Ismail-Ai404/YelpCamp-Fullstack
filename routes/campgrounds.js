@@ -1,7 +1,4 @@
 /** @format */
-if (process.env.NODE_ENV !== "production") {
-     require("dotenv").config();
-}
 
 const express = require("express");
 const router = express.Router();
@@ -24,10 +21,12 @@ const upload = multer({ storage });
 // Multer middleware to handle multiple file uploads with the field name 'images'
 // You can adjust the number based on your requirements
 
-router
-     .route("/")
-     .get(ctlCamps.index)
-     .post(isLoggedIn, validateCampground, ctlCamps.createCampground);
+router.route("/").get(ctlCamps.index).post(
+     isLoggedIn,
+     // validateCampground,
+     upload.array("image"),
+     ctlCamps.createCampground
+);
 
 router.get("/new", isLoggedIn, ctlCamps.renderNewForm);
 

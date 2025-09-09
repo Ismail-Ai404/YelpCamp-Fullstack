@@ -11,6 +11,7 @@
           <form
                action="/campgrounds"
                method="POST"
+               enctype="multipart/form-data"
                class="needs-validation"
                novalidate
           >
@@ -49,16 +50,26 @@
                <div class="mb-3">
                     <label for="image" class="form-label fw-semibold">
                          <i class="bi bi-image-fill me-1 text-warning"></i>
-                         Image URL
+                         Upload Image(s)
                     </label>
-                    <input
-                         type="url"
-                         name="image"
-                         id="image"
-                         class="form-control rounded-3 shadow-sm"
-                         placeholder="https://example.com/image.jpg"
-                         required
-                    />
+                    <div class="mb-3">
+                         <div class="form-file custom-file">
+                              <input
+                                   type="file"
+                                   class="form-file-input"
+                                   id="image"
+                                   name="image"
+                                   multiple
+                              />
+                              <label class="form-file-label" for="image">
+                                   <span
+                                        class="form-file-text custom-file-label"
+                                        >Choose image(s)...</span
+                                   >
+                                   <span class="form-file-button">Browse</span>
+                              </label>
+                         </div>
+                    </div>
                </div>
 
                <!-- Description -->

@@ -2,6 +2,7 @@
 
 const mongoose = require("mongoose");
 const Campground = require("../models/campground");
+const Review = require("../models/review");
 const cities = require("./cities");
 const { descriptors, places } = require("./seedHelper");
 
@@ -16,11 +17,19 @@ db.once("open", () => {
 // Function to get random element from an array
 const sample = (array) => array[Math.floor(Math.random() * array.length)];
 
-// Async function to seed database
-const seedDB = async () => {
+const deleteDB = async () => {
      // Delete all existing campgrounds
      await Campground.deleteMany({});
      console.log("Deleted all campgrounds");
+     // Delete all existing reviews
+     await Review.deleteMany({});
+     console.log("Deleted all reviews");
+};
+
+// Async function to seed database
+const seedDB = async () => {
+     // Delete all existing campgrounds
+     await deleteDB();
 
      function roundToTwoDecimalPlaces(num) {
           return Math.round(num * 100) / 100;
@@ -39,7 +48,16 @@ const seedDB = async () => {
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                location: `${randomCity.city}, ${randomCity.division}`,
                price,
-               image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+               images: [
+                    {
+                         url: "https://res.cloudinary.com/duzj5bpxt/image/upload/v1757431255/YelpCamp/duzcur3mbeckzsl9wwfp.jpg",
+                         filename: "YelpCamp/duzcur3mbeckzsl9wwfp",
+                    },
+                    {
+                         url: "https://res.cloudinary.com/duzj5bpxt/image/upload/v1757431257/YelpCamp/xs9oamfr9lf3oowyxe5u.jpg",
+                         filename: "YelpCamp/xs9oamfr9lf3oowyxe5u",
+                    },
+               ],
           });
 
           await camp.save();

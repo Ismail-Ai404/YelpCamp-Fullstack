@@ -18,15 +18,19 @@ module.exports.renderNewForm = (req, res) => {
 };
 
 module.exports.createCampground = catchAsync(async (req, res) => {
-     const { title, location, description, price, image } = req.body;
+     const { title, location, description, price } = req.body;
+     console.log("req.files:", req.files); // 👈 Debug check
+
      // try {
      const campground = new Campground({
           title,
           location,
           description,
           price,
-          image,
+          images: req.files.map((f) => ({ url: f.path, filename: f.filename })),
+          author: req.user._id,
      });
+
      // if (!title || !location) {
      //      throw new ExpressError("Invalid Camground Input", 400);
      // }
@@ -35,7 +39,8 @@ module.exports.createCampground = catchAsync(async (req, res) => {
           req.flash("error", "Failed to create campground.");
           res.redirect("/campgrounds");
      }
-     campground.author = req.user._id;
+     console.log(campground);
+
      await campground.save();
      req.flash("success", "Campground created successfully!");
      res.redirect(`/campgrounds/${campground._id}`);
