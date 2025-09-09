@@ -8,7 +8,7 @@ const passport = require("passport");
 const { route } = require("./campgrounds");
 
 // const { isLoggedIn } = require("../middleware/login");
-const { storeReturnTo } = require("../middleware/sessionStore");
+const { storeReturnTo } = require("../middlewares/sessionStore");
 
 router.get("/register", (req, res) => {
      res.render("auth/register");

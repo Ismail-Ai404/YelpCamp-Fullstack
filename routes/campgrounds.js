@@ -7,11 +7,11 @@ const Campground = require("../models/campground");
 const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");
 
-const { campgroundSchema } = require("../middleware/joiSchemas");
+const { campgroundSchema } = require("../middlewares/joiSchemas");
 
-const { isLoggedIn } = require("../middleware/isLoggedIn");
-const isAuthor = require("../middleware/isAuthor");
-const { validateCampground } = require("../middleware/schemaValidation");
+const { isLoggedIn } = require("../middlewares/isLoggedIn");
+const isAuthor = require("../middlewares/isAuthor");
+const { validateCampground } = require("../middlewares/schemaValidation");
 
 // Index route - show all campgrounds
 router.get("/", async (req, res) => {

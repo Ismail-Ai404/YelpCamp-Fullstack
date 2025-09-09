@@ -2,9 +2,9 @@
 
 const express = require("express");
 const router = express.Router({ mergeParams: true });
-const { reviewSchema } = require("../middleware/joiSchemas");
+const { reviewSchema } = require("../middlewares/joiSchemas");
 
-const isReviewAuthor = require("../middleware/isReviewAuthor");
+const isReviewAuthor = require("../middlewares/isReviewAuthor");
 
 const Review = require("../models/review");
 const Campground = require("../models/campground");
@@ -12,8 +12,8 @@ const Campground = require("../models/campground");
 const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");
 
-const { isLoggedIn } = require("../middleware/isLoggedIn");
-const { validateReview } = require("../middleware/schemaValidation");
+const { isLoggedIn } = require("../middlewares/isLoggedIn");
+const { validateReview } = require("../middlewares/schemaValidation");
 
 // Create review
 router.post(
