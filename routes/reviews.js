@@ -4,37 +4,31 @@ const express = require("express");
 const router = express.Router({ mergeParams: true });
 const { reviewSchema } = require("../middleware/joiSchemas");
 
+const isReviewAuthor = require("../middleware/isReviewAuthor");
+
 const Review = require("../models/review");
 const Campground = require("../models/campground");
 
 const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");
 
-const { isLoggedIn } = require("../middleware/login");
-
-// Validation middleware
-function validateReview(req, res, next) {
-     const { error } = reviewSchema.validate(req.body);
-     if (error) {
-          const msg = error.details.map((d) => d.message).join(", ");
-          // req.flash("error", msg);
-          throw new ExpressError(msg, 400);
-     } else next();
-}
+const { isLoggedIn } = require("../middleware/isLoggedIn");
+const { validateReview } = require("../middleware/schemaValidation");
 
 // Create review
 router.post(
      "",
-     // isLoggedIn,
+     isLoggedIn,
      validateReview,
      catchAsync(async (req, res) => {
           const { id } = req.params;
-          const campground = await Campground.findById(id);
+          const campground = await Campground.findById(id).populate("author");
           if (!campground) {
                req.flash("error", "Campground not Found");
                return res.redirect("/campgrounds");
           }
           const review = new Review(req.body.review);
+          review.author = req.user._id;
           campground.reviews.push(review);
           await review.save();
           await campground.save();
@@ -46,7 +40,8 @@ router.post(
 // Delete Review
 router.delete(
      "/:reviewId",
-     // isLoggedIn,
+     isLoggedIn,
+     isReviewAuthor,
      catchAsync(async (req, res) => {
           const { id, reviewId } = req.params;
           const campground = await Campground.findByIdAndUpdate(id, {

@@ -8,26 +8,10 @@ const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");
 
 const { campgroundSchema } = require("../middleware/joiSchemas");
-const { isLoggedIn } = require("../middleware/login");
 
-function validateCampground(req, res, next) {
-     const { error } = campgroundSchema.validate(req.body);
-     if (error) {
-          const msg = error.details.map((d) => d.message).join(", ");
-          // req.flash("error", msg);
-          throw new ExpressError(msg, 400);
-     } else next();
-}
-const isAuthor = async (req, res, next) => {
-     const { id } = req.params;
-     const campground = await Campground.findById(id);
-
-     if (!campground.author.equals(req.user._id)) {
-          req.flash("error", "You do not have permission to do that!");
-          return res.redirect(`/campgrounds/${id}`);
-     }
-     next();
-};
+const { isLoggedIn } = require("../middleware/isLoggedIn");
+const isAuthor = require("../middleware/isAuthor");
+const { validateCampground } = require("../middleware/schemaValidation");
 
 // Index route - show all campgrounds
 router.get("/", async (req, res) => {
@@ -82,8 +66,9 @@ router.get(
           const { id } = req.params;
 
           const campground = await Campground.findById(id)
-               .populate("reviews")
+               .populate({ path: "reviews", populate: { path: "author" } })
                .populate("author");
+
           if (!campground) {
                // console.error(err);
                req.flash("error", "Campground not found.");
