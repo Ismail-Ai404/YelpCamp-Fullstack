@@ -9,31 +9,19 @@ const { isLoggedIn } = require("../middlewares/isLoggedIn");
 const isAuthor = require("../middlewares/isAuthor");
 const { validateCampground } = require("../middlewares/schemaValidation");
 
-// Index route - show all campgrounds
-router.get("/", ctlCamps.index);
+router
+     .route("/")
+     .get(ctlCamps.index)
+     .post(isLoggedIn, validateCampground, ctlCamps.createCampground);
 
-// New campground form
 router.get("/new", isLoggedIn, ctlCamps.renderNewForm);
 
-// Create campground
-router.post("/", isLoggedIn, validateCampground, ctlCamps.createCampground);
+router
+     .route("/:id")
+     .get(ctlCamps.showCampground)
+     .put(isLoggedIn, isAuthor, validateCampground, ctlCamps.updateCampground)
+     .delete(isLoggedIn, isAuthor, ctlCamps.deleteCampground);
 
-// Show single campground
-router.get("/:id", ctlCamps.showCampground);
-
-// Edit campground form
 router.get("/:id/edit", isLoggedIn, isAuthor, ctlCamps.renderEditForm);
-
-// Update campground
-router.put(
-     "/:id",
-     isLoggedIn,
-     isAuthor,
-     validateCampground,
-     ctlCamps.updateCampground
-);
-
-//Express route for deleting a campground
-router.delete("/:id", isLoggedIn, isAuthor, ctlCamps.deleteCampground);
 
 module.exports = router;
