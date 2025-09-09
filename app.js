@@ -72,7 +72,7 @@ passport.deserializeUser(User.deserializeUser());
 // Flash & isLoggedIn middleware for all views
 app.use((req, res, next) => {
      // only store the url if it is not login or register
-     if (!["/login", "/"].includes(req.originalUrl)) {
+     if (!["/login", "/", "/register"].includes(req.originalUrl)) {
           req.session.returnTo = req.originalUrl;
      }
      // console.log("session: ", req.session.returnTo);

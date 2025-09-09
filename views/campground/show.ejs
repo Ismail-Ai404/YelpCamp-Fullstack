@@ -38,19 +38,28 @@
                          <% } %> 
 
                          <% if(campground.price) { %>
-                         <span class="badge bg-success fs-7 mb-2">
+                         <span class="badge bg-success fs-7 mb-2 me-2">
                               <i class="bi bi-cash-coin me-1"></i>
                               $<%= campground.price %>/night
                          </span>
                          <% } %>
+                         <% if(campground.author) { %>
+                         <span class="badge bg-success fs-7 mb-2">
+                              <i class="bi bi-person-fill me-1"></i>
+                              Made by <%= campground.author.username %>
+                         </span>
+                         <% } %>
+                         
 
                          <div class="mt-2 d-flex flex-wrap gap-2">
                               <a href="/campgrounds" class="btn btn-warning btn-sm">
                                    <i class="bi bi-arrow-left-circle me-1"></i> Back
                               </a>
-                              <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-primary btn-sm">
-                                   <i class="bi bi-pencil-square me-1"></i> Edit
-                              </a>
+
+                              <% if (currentUser && campground.author._id.equals(currentUser._id)) { %>
+                                   <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil-square me-1"></i> Edit
+                                   </a>
                               <form
                                    action="/campgrounds/<%= campground._id %>?_method=DELETE"
                                    method="POST"
@@ -61,6 +70,8 @@
                                         <i class="bi bi-trash-fill me-1"></i> Delete
                                    </button>
                               </form>
+                              <% } %>
+
                          </div>
                     </div>
                </div>

@@ -58,6 +58,7 @@ router.post(
                req.flash("error", "Failed to create campground.");
                res.redirect("/campgrounds");
           }
+          campground.author = req.user._id;
           await campground.save();
           req.flash("success", "Campground created successfully!");
           res.redirect(`/campgrounds/${campground._id}`);
@@ -70,13 +71,16 @@ router.get(
      catchAsync(async (req, res) => {
           const { id } = req.params;
 
-          const campground = await Campground.findById(id).populate("reviews");
+          const campground = await Campground.findById(id)
+               .populate("reviews")
+               .populate("author");
           if (!campground) {
                // console.error(err);
                req.flash("error", "Campground not found.");
                // throw new ExpressError("Campground not found", 404);
                return res.redirect("/campgrounds");
           }
+          // console.log(campground);
           res.render("campground/show", { campground });
      })
 );
@@ -92,6 +96,10 @@ router.get(
           if (!campground) {
                req.flash("error", "Campground not found.");
                return res.redirect("/campgrounds");
+          }
+          if (!campground.author.equals(req.user._id)) {
+               req.flash("error", "You do not have permission to do that!");
+               return res.redirect(`/campgrounds/${id}`);
           }
           res.render("campground/edit", { campground });
      })
@@ -116,6 +124,10 @@ router.put(
                req.flash("error", "Error updating campground.");
                res.redirect("/campgrounds");
           }
+          if (!campground.author.equals(req.user._id)) {
+               req.flash("error", "You do not have permission to do that!");
+               return res.redirect(`/campgrounds/${id}`);
+          }
           req.flash("success", "Campground updated successfully!");
           res.redirect(`/campgrounds/${campground._id}`);
      })
@@ -127,6 +139,18 @@ router.delete(
      isLoggedIn,
      catchAsync(async (req, res) => {
           // This one command will now trigger the middleware
+
+          const { id } = req.params;
+          const campground = await Campground.findById(id);
+          if (!campground) {
+               req.flash("error", "Campground not found.");
+               return res.redirect("/campgrounds");
+          }
+          if (!campground.author.equals(req.user._id)) {
+               req.flash("error", "You do not have permission to do that!");
+               return res.redirect(`/campgrounds/${id}`);
+          }
+
           await Campground.findByIdAndDelete(req.params.id);
           req.flash(
                "success",
