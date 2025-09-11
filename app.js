@@ -90,14 +90,14 @@ app.use((req, res, next) => {
 
 // Root route
 app.get("/", (req, res) => {
-     res.send("Welcome to YelpCamp!");
+     res.render("home");
 });
 
-app.get("/fakeuser", async (req, res) => {
-     const user = new User({ email: "ayon@gmail.com", username: "ayon" });
-     const newUser = await User.register(user, "chicken");
-     res.send(newUser);
-});
+// app.get("/fakeuser", async (req, res) => {
+//      const user = new User({ email: "@gmail.com", username: "yon" });
+//      const newUser = await User.register(user, "chicken");
+//      res.send(newUser);
+// });
 
 app.use("/", authRoutes);
 
