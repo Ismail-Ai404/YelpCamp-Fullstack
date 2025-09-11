@@ -1,5 +1,6 @@
 <!-- @format -->
 <% layout("layouts/boilerplate") %>
+<div id="campgroundMap" class="mt-0" style="height: 300px"></div>
 
 <div class="container mt-4">
      <h1 class="mb-4 text-center">
@@ -68,3 +69,9 @@
      </div>
      <% }) %>
 </div>
+
+<script>
+     const campgrounds= <%- JSON.stringify(campgrounds) %>;
+</script>
+
+<script src="/javascripts/campgroundMap.js"></script>
