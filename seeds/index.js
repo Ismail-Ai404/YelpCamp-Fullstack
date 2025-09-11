@@ -26,26 +26,28 @@ const deleteDB = async () => {
      console.log("Deleted all reviews");
 };
 
+// Helper to round prices
+function roundToTwoDecimalPlaces(num) {
+     return Math.round(num * 100) / 100;
+}
+
 // Async function to seed database
 const seedDB = async () => {
-     // Delete all existing campgrounds
+     // Delete old data
      await deleteDB();
 
-     function roundToTwoDecimalPlaces(num) {
-          return Math.round(num * 100) / 100;
-     }
      // Add 50 new campgrounds
      for (let i = 0; i < 50; i++) {
-          const randomCity = sample(cities); // { city, division }
+          const randomCity = sample(cities); // { city, division, lat, long }
           const descriptor = sample(descriptors);
           const place = sample(places);
           const price = roundToTwoDecimalPlaces(Math.random() * 20 + 10);
 
           const camp = new Campground({
-               author: "68b9a42fdadc8ca62c0dc4a7",
+               author: "68b9a42fdadc8ca62c0dc4a7", // Replace with a real user ID
                title: `${descriptor} ${place}`,
                description:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                location: `${randomCity.city}, ${randomCity.division}`,
                price,
                images: [
@@ -58,11 +60,15 @@ const seedDB = async () => {
                          filename: "YelpCamp/xs9oamfr9lf3oowyxe5u",
                     },
                ],
+               geometry: {
+                    type: "Point",
+                    coordinates: [randomCity.long, randomCity.lat], // ⚠️ GeoJSON expects [lng, lat]
+               },
           });
 
           await camp.save();
      }
-     console.log("Added 50 campgrounds");
+     console.log("Added 50 campgrounds with geometry");
 };
 
 seedDB().then(() => mongoose.connection.close());

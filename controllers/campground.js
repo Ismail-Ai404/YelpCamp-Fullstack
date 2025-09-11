@@ -3,6 +3,16 @@
 const Campground = require("../models/campground");
 const catchAsync = require("../utils/catchAsync");
 const { cloudinary } = require("../database/cloudinary");
+const { geocoding, config } = require("@maptiler/client");
+
+// require("dotenv").config(); // ensure .env loaded if not already
+
+const maptilerApiKey = process.env.MAPTILER_API_KEY;
+if (!maptilerApiKey) {
+     throw new Error("MAPTILER_API_KEY is not defined in .env");
+}
+
+config.apiKey = maptilerApiKey;
 
 module.exports.index = async (req, res) => {
      const campgrounds = await Campground.find({});
@@ -22,12 +32,36 @@ module.exports.createCampground = catchAsync(async (req, res) => {
      const { title, location, description, price } = req.body;
      console.log("req.files:", req.files); // 👈 Debug check
 
-     // try {
+     let geoData;
+     try {
+          const geoResponse = await geocoding.forward(location, { limit: 1 });
+          if (
+               !geoResponse ||
+               !geoResponse.features ||
+               geoResponse.features.length === 0
+          ) {
+               throw new Error("No geocoding result for location: " + location);
+          }
+          const feature = geoResponse.features[0];
+          // coordinates are [lon, lat]
+          const [lon, lat] = feature.geometry.coordinates;
+          geoData = {
+               type: "Point",
+               coordinates: [lon, lat],
+          };
+          console.log("Geocoded data:", geoData); // 👈 Debug check
+     } catch (err) {
+          console.error("Error during geocoding:", err);
+          req.flash("error", "Invalid location. Could not geocode.");
+          return res.redirect("/campgrounds/new");
+     }
+
      const campground = new Campground({
           title,
           location,
           description,
           price,
+          geometry: geoData, // new field
           images: req.files.map((f) => ({ url: f.path, filename: f.filename })),
           author: req.user._id,
      });
