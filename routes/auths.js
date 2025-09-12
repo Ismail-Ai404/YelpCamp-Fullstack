@@ -7,6 +7,7 @@ const catchAsync = require("../utils/catchAsync");
 const passport = require("passport");
 const { route } = require("./campgrounds");
 const ctlAuths = require("../controllers/auth");
+const { validateUser } = require("../middlewares/schemaValidation");
 
 // const { isLoggedIn } = require("../middleware/login");
 const { storeReturnTo } = require("../middlewares/sessionStore.js");
@@ -14,7 +15,7 @@ const { storeReturnTo } = require("../middlewares/sessionStore.js");
 router
      .route("/register")
      .get(ctlAuths.renderRegisterForm)
-     .post(ctlAuths.registerUser);
+     .post(validateUser, ctlAuths.registerUser);
 
 router
      .route("/login")

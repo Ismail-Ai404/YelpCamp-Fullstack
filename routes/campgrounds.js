@@ -21,12 +21,15 @@ const upload = multer({ storage });
 // Multer middleware to handle multiple file uploads with the field name 'images'
 // You can adjust the number based on your requirements
 
-router.route("/").get(ctlCamps.index).post(
-     isLoggedIn,
-     // validateCampground,
-     upload.array("image"),
-     ctlCamps.createCampground
-);
+router
+     .route("/")
+     .get(ctlCamps.index)
+     .post(
+          isLoggedIn,
+          upload.array("image"),
+          validateCampground,
+          ctlCamps.createCampground
+     );
 
 router.get("/new", isLoggedIn, ctlCamps.renderNewForm);
 
@@ -36,8 +39,8 @@ router
      .put(
           isLoggedIn,
           isAuthor,
-          // validateCampground,
           upload.array("image"),
+          validateCampground,
           ctlCamps.updateCampground
      )
      .delete(isLoggedIn, isAuthor, ctlCamps.deleteCampground);
