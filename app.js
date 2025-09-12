@@ -60,7 +60,9 @@ const sessionConfig = {
      resave: false,
      saveUninitialized: true,
      cookie: {
+          name: "j928hd9wq8h2", // Avoid default name
           httpOnly: true,
+          // secure: true,
           expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // one week
           maxAge: 1000 * 60 * 60 * 24 * 7, // one week
      },

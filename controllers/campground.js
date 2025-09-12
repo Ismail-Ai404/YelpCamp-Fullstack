@@ -49,7 +49,7 @@ module.exports.createCampground = catchAsync(async (req, res) => {
                type: "Point",
                coordinates: [lon, lat],
           };
-          console.log("Geocoded data:", geoData); // 👈 Debug check
+          // console.log("Geocoded data:", geoData); // 👈 Debug check
      } catch (err) {
           console.error("Error during geocoding:", err);
           req.flash("error", "Invalid location. Could not geocode.");
