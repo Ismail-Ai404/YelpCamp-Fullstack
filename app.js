@@ -26,6 +26,10 @@ const { Session } = require("inspector/promises");
 const User = require("./models/user");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+// const bodyParser = require("body-parser");
+
+// const mongoSanitize = require("express-mongo-sanitize");
+const expressMongoSanitize = require("@exortek/express-mongo-sanitize");
 
 const app = express();
 
@@ -47,6 +51,9 @@ app.use(express.static(path.join(__dirname, "public")));
 // Middleware
 app.use(express.urlencoded({ extended: true })); // parse form data
 app.use(methodOverride("_method"));
+
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
 
 const sessionConfig = {
      secret: "thisshouldbeabettersecret!",
@@ -87,6 +94,23 @@ app.use((req, res, next) => {
      res.locals.currentUser = req.user;
      next();
 });
+
+// Data sanitization against NoSQL query injection
+// app.use((req, res, next) => {
+//      // Make req.query a plain object if it isn't
+//      if (
+//           !Object.getOwnPropertyDescriptor(req, "query") ||
+//           typeof req.query !== "object"
+//      ) {
+//           req.query = Object.assign({}, req.query);
+//      }
+//      next();
+// });
+// app.use(mongoSanitize());
+
+app.use(expressMongoSanitize());
+// Route parameter sanitization (recommended way):
+app.param("username", expressMongoSanitize.paramSanitizeHandler());
 
 // Root route
 app.get("/", (req, res) => {
