@@ -21,6 +21,7 @@
                                    class="carousel-item <%= i === 0 ? 'active' : '' %>"
                               >
                                    <img
+                                        crossorigin="anonymous"
                                         src="<%= img.url %>"
                                         class="d-block w-100"
                                         alt="Campground Image <%= i + 1 %>"
@@ -58,6 +59,7 @@
 
                     <% } else { %>
                     <img
+                         crossorigin="anonymous"
                          src="https://via.placeholder.com/800x400?text=No+Image"
                          class="card-img-top w-100"
                          alt="No Image"

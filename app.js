@@ -17,6 +17,7 @@ const flash = require("connect-flash");
 
 const ExpressError = require("./utils/ExpressError");
 // const catchAsync = require("./utils/catchAsync");
+const helmet = require("helmet");
 
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
@@ -113,6 +114,70 @@ app.use((req, res, next) => {
 app.use(expressMongoSanitize());
 // Route parameter sanitization (recommended way):
 app.param("username", expressMongoSanitize.paramSanitizeHandler());
+app.use(helmet());
+
+const scriptSrcUrls = [
+     "https://stackpath.bootstrapcdn.com/",
+     "https://api.tiles.mapbox.com/",
+     "https://api.mapbox.com/",
+     "https://kit.fontawesome.com/",
+     "https://cdnjs.cloudflare.com/",
+     "https://cdn.jsdelivr.net",
+     "https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js",
+     "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
+];
+const styleSrcUrls = [
+     "https://kit-free.fontawesome.com/",
+     "https://stackpath.bootstrapcdn.com/",
+     "https://api.mapbox.com/",
+     "https://api.tiles.mapbox.com/",
+     "https://fonts.googleapis.com/",
+     "https://use.fontawesome.com/",
+     "https://cdn.jsdelivr.net", // <-- Add this for Bootstrap & Bootstrap Icons
+     "https://unpkg.com/", // <-- Add this for Leaflet & MarkerCluster
+];
+const connectSrcUrls = [
+     "https://api.mapbox.com/",
+     "https://a.tiles.mapbox.com/",
+     "https://b.tiles.mapbox.com/",
+     "https://events.mapbox.com/",
+];
+const fontSrcUrls = [
+     "https://fonts.gstatic.com/", // (if you use Google Fonts)
+     "https://cdn.jsdelivr.net", // <-- Add this for Bootstrap Icons
+];
+
+app.use(
+     helmet.contentSecurityPolicy({
+          directives: {
+               defaultSrc: ["'self'"],
+               connectSrc: ["'self'", ...connectSrcUrls],
+               scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+               styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+               workerSrc: ["'self'", "blob:"],
+               objectSrc: [],
+               // Here's the part to update: imgSrc
+               imgSrc: [
+                    "'self'",
+                    "blob:",
+                    "data:",
+                    "https://res.cloudinary.com/duzj5bpxt/",
+                    "https://images.unsplash.com/",
+                    "https://a.basemaps.cartocdn.com/", // <-- Allow this
+                    "https://b.basemaps.cartocdn.com/", // <-- And this
+                    "https://c.basemaps.cartocdn.com/", // <-- And this
+                    "https://unpkg.com/", // <-- For Leaflet marker icons
+                    "https://*.tile.openstreetmap.org/", // <-- For OSM map tiles
+                    "https://a.tile.openstreetmap.org/",
+                    "https://b.tile.openstreetmap.org/",
+                    "https://c.tile.openstreetmap.org/",
+                    // You can also add "https://basemaps.cartocdn.com" if tiles load from that root
+               ],
+               fontSrc: ["'self'", ...fontSrcUrls],
+               // other directives...
+          },
+     })
+);
 
 // Root route
 app.get("/", (req, res) => {
