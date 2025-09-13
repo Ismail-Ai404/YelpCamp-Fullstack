@@ -46,4 +46,5 @@ module.exports.userSchema = Joy.object({
      username: Joy.string().alphanum().min(3).max(30).required().escapeHTML(),
      email: Joy.string().email().required().escapeHTML(),
      password: Joy.string().required().min(8).max(128),
+     confirmPassword: Joy.string(),
 });

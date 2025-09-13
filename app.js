@@ -33,8 +33,10 @@ const LocalStrategy = require("passport-local");
 const expressMongoSanitize = require("@exortek/express-mongo-sanitize");
 
 const app = express();
+const dbURL = process.env.DB_URL;
 
-mongoose.connect("mongodb://localhost:27017/yelp-camp");
+// mongodb://localhost:27017/yelp-camp
+mongoose.connect(dbURL);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
