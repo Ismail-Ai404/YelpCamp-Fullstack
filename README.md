@@ -120,7 +120,7 @@ Want to switch styles? Just edit `/public/js/map.js`:
 ```javascript
 const styleId = "dataviz-dark"; // Try: "dark-v2", "bright-v2", "outdoor-v2", "streets-v2"
 ```
-
+---
 ## Installation & Setup
 
 1.  **Clone the repository:**
