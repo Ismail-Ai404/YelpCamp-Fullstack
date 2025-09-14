@@ -12,11 +12,11 @@
 
 | Feature | Preview |
 |---------|---------|
-| **Home Page** | ![Home Page](https://via.placeholder.com/800x400?text=YelpCamp+Homepage) |
-| **Campground Detail + Reviews** | ![Detail Page](https://via.placeholder.com/800x400?text=Campground+Details+%26+Reviews) |
-| **Interactive Map View** | ![Map View](https://via.placeholder.com/800x400?text=Dark+Themed+Map+with+Circle+Markers) |
+| **Home Page** | <img width="712" height="597" alt="image" src="https://github.com/user-attachments/assets/cdc9b804-3526-43e0-adfa-27c3e7c29c3e" />|
+| **Campground Detail + Reviews** | <img width="711" height="594" alt="image" src="https://github.com/user-attachments/assets/bf023aaa-e68f-4523-9fc0-9f5f25d502a2" />|
 
-> 💡 *Replace placeholder URLs above with actual screenshots when available.*
+
+> 💡 *Images taken from actual site.*
 
 ---
 
@@ -184,7 +184,7 @@ Open a Pull Request
 ## 📬 Author
 **Ismail Hossain**
 -   GitHub: [@Ismail-Ai404](https://github.com/Ismail-Ai404)
--   LinkedIn: [Your LinkedIn Profile URL] (You can add this later)
+-   LinkedIn: [Ismail](https://www.linkedin.com/in/ismailgetsitdone/) 
 
 ---
 
