@@ -12,8 +12,8 @@
 
 | Feature | Preview |
 |---------|---------|
-| **Home Page** | <img width="712" height="597" alt="image" src="https://github.com/user-attachments/assets/cdc9b804-3526-43e0-adfa-27c3e7c29c3e" />|
-| **Campground Detail + Reviews** | <img width="711" height="594" alt="image" src="https://github.com/user-attachments/assets/bf023aaa-e68f-4523-9fc0-9f5f25d502a2" />|
+| **Home Page** | <img width="712" height="597" alt="Homepage image" src="https://github.com/user-attachments/assets/cdc9b804-3526-43e0-adfa-27c3e7c29c3e" />|
+| **Campground Detail + Reviews** | <img width="711" height="594" alt="Camground Detail image" src="https://github.com/user-attachments/assets/bf023aaa-e68f-4523-9fc0-9f5f25d502a2" />|
 
 
 > 💡 *Images taken from actual site.*
@@ -34,35 +34,7 @@ Here’s your **corrected Table of Contents** that will link properly to each se
 - [✨ Key Features](#-key-features)
 - [✅ Technologies Used](#-technologies-used)
 - [🗺️ Map Customization](#️-map-customization)
-- [Installation & Setup](#installation--setup)
-- [🤝 Contributing](#-contributing)
-- [📜 License](#-license)
-- [🙏 Acknowledgements](#-acknowledgements)
-- [📬 Author](#-author)
-
----
-
-### ✅ Why this works:
-- GitHub auto-generates heading anchors by:
-  - Lowercasing everything
-  - Replacing spaces with `-`
-  - Removing emojis or encoding them (but sometimes they break — safer to omit them from ToC links if unsure)
-- So `## 🎯 Project Overview` → becomes `#project-overview`
-- Emojis like `🏕️` can cause inconsistent behavior across platforms — for reliability, we’ve kept them visually in the ToC but linked to the *text-only* version of the ID (`yelpcamp`, not `️-yelpcamp`).
-
-> 💡 **Pro Tip**: If you want 100% reliable anchor links, avoid starting headings with emojis. But since your headings look great with them, we preserved visual style while ensuring links work.
-
----
-
-## 📋 Table of Contents
-
-- [🏕️ YelpCamp](#️-yelpcamp)
-- [🖼️ Screenshots](#️-screenshots)
-- [🎯 Project Overview](#-project-overview)
-- [✨ Key Features](#-key-features)
-- [✅ Technologies Used](#-technologies-used)
-- [🗺️ Map Customization](#️-map-customization)
-- [🧑🏽‍💻 Installation & Setup](#installation--setup)
+- [🧑 Installation & Setup](#installation--setup)
 - [🤝 Contributing](#-contributing)
 - [📜 License](#-license)
 - [🙏 Acknowledgements](#-acknowledgements)
@@ -149,7 +121,7 @@ Want to switch styles? Just edit `/public/js/map.js`:
 const styleId = "dataviz-dark"; // Try: "dark-v2", "bright-v2", "outdoor-v2", "streets-v2"
 ```
 
-## 🧑🏽‍💻 Installation & Setup
+## 🧑 Installation & Setup
 
 1.  **Clone the repository:**
     ```bash
