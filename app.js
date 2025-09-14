@@ -23,6 +23,7 @@ const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 const authRoutes = require("./routes/auths");
 const { Session } = require("inspector/promises");
+const MongoStore = require("connect-mongo");
 
 const User = require("./models/user");
 const passport = require("passport");
@@ -33,10 +34,12 @@ const LocalStrategy = require("passport-local");
 const expressMongoSanitize = require("@exortek/express-mongo-sanitize");
 
 const app = express();
-const dbURL = process.env.DB_URL;
 
-// mongodb://localhost:27017/yelp-camp
-mongoose.connect(dbURL);
+const dbURL = process.env.DB_URL || "mongodb://localhost:27017/yelp-camp";
+// mongoose.connect(dbURL);
+// const dbUrl = ;
+
+mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -58,12 +61,23 @@ app.use(methodOverride("_method"));
 // app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
 
+const secret = process.env.SECRET;
+const store = MongoStore.create({
+     mongoUrl: dbUrl,
+     touchAfter: 24 * 60 * 60,
+     crypto: {
+          secret,
+     },
+});
+
 const sessionConfig = {
-     secret: "thisshouldbeabettersecret!",
+     store,
+     name: "j928hd9wq8h2", // Avoid default name
+
+     secret,
      resave: false,
      saveUninitialized: true,
      cookie: {
-          name: "j928hd9wq8h2", // Avoid default name
           httpOnly: true,
           // secure: true,
           expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // one week
@@ -212,7 +226,9 @@ app.use((err, req, res, next) => {
      res.status(statusCode).render("error", { err });
 });
 
+const port = process.env.PORT || 3000;
+
 // Server start
-app.listen(3000, () => {
-     console.log("Serving on port 3000");
+app.listen(port, () => {
+     console.log(`Serving on port ${port}`);
 });
