@@ -34,7 +34,7 @@ Here’s your **corrected Table of Contents** that will link properly to each se
 - [✨ Key Features](#-key-features)
 - [✅ Technologies Used](#-technologies-used)
 - [🗺️ Map Customization](#️-map-customization)
-- [🧑 Installation & Setup](#installation--setup)
+- [Installation & Setup](#installation--setup)
 - [🤝 Contributing](#-contributing)
 - [📜 License](#-license)
 - [🙏 Acknowledgements](#-acknowledgements)
@@ -121,7 +121,7 @@ Want to switch styles? Just edit `/public/js/map.js`:
 const styleId = "dataviz-dark"; // Try: "dark-v2", "bright-v2", "outdoor-v2", "streets-v2"
 ```
 
-## 🧑 Installation & Setup
+## Installation & Setup
 
 1.  **Clone the repository:**
     ```bash
