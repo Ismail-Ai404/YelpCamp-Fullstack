@@ -4,7 +4,7 @@
 
 > A full-stack web application built with Node.js, Express, and MongoDB. Discover, review, and share campgrounds around the world — complete with interactive maps, image uploads, user authentication, and responsive UI.
 
-🔗 **Live Demo:** [https://yelpcamp-3bdc.onrender.com/campgrounds](https://yelpcamp-3bdc.onrender.com/campgrounds)
+🔗 **Live Demo:** [https://yelpcamp-3bdc.onrender.com/campgrounds](https://yelpcamp-3bdc.onrender.com/)
 
 ---
 
