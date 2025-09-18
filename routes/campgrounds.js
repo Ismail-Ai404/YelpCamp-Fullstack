@@ -31,8 +31,6 @@ router
           ctlCamps.createCampground
      );
 
-router.get("/new", isLoggedIn, ctlCamps.renderNewForm);
-
 router
      .route("/:id")
      .get(ctlCamps.showCampground)
@@ -44,7 +42,5 @@ router
           ctlCamps.updateCampground
      )
      .delete(isLoggedIn, isAuthor, ctlCamps.deleteCampground);
-
-router.get("/:id/edit", isLoggedIn, isAuthor, ctlCamps.renderEditForm);
 
 module.exports = router;

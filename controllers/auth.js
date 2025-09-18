@@ -3,10 +3,6 @@
 const User = require("../models/user");
 const catchAsync = require("../utils/catchAsync");
 
-module.exports.renderRegisterForm = (req, res) => {
-     res.render("auth/register");
-};
-
 module.exports.registerUser = catchAsync(async (req, res, next) => {
      const { email, username, password, confirmPassword } = req.body;
 
@@ -16,34 +12,43 @@ module.exports.registerUser = catchAsync(async (req, res, next) => {
           const registeredUser = await User.register(user, password);
           req.login(registeredUser, (err) => {
                if (err) return next(err);
-               req.flash("success", "Welcome to YelpCamp!");
-               res.redirect("/campgrounds");
+               res.json({
+                    success: true,
+                    message: "Welcome to YelpCamp!",
+                    user: {
+                         id: registeredUser._id,
+                         username: registeredUser.username,
+                         email: registeredUser.email
+                    }
+               });
           });
 
           if (!registeredUser) {
-               req.flash("error", "User could not be registered");
-               return res.redirect("/register");
+               return res.status(400).json({
+                    success: false,
+                    message: "User could not be registered"
+               });
           }
      } catch (err) {
-          req.flash("error", err.message);
-          res.redirect("/register");
+          res.status(400).json({
+               success: false,
+               message: err.message
+          });
      }
 });
 
-module.exports.renderLoginForm = (req, res) => {
-     res.render("auth/login");
-};
-
 module.exports.loginUser = (req, res) => {
-     req.flash("success", "Welcome Back!");
-     const redirectUrl = res.locals.returnTo || "/campgrounds"; // update this line to use res.locals.returnTo now
      delete req.session.returnTo; // Clears the session value after use (prevents staleness)
-
-     // console.log(redirectUrl);
-     // console.log(res.locals.returnTo);
-     // delete req.locals.returnTo; // clean up session
-
-     res.redirect(redirectUrl);
+     
+     res.json({
+          success: true,
+          message: "Welcome Back!",
+          user: {
+               id: req.user._id,
+               username: req.user.username,
+               email: req.user.email
+          }
+     });
 };
 
 module.exports.logoutUser = (req, res, next) => {
@@ -51,7 +56,28 @@ module.exports.logoutUser = (req, res, next) => {
           if (err) {
                return next(err);
           }
-          req.flash("success", "Goodbye!");
-          res.redirect("/campgrounds");
+          res.json({
+               success: true,
+               message: "Goodbye!"
+          });
      });
+};
+
+// Get current user endpoint
+module.exports.getCurrentUser = (req, res) => {
+     if (req.user) {
+          res.json({
+               success: true,
+               user: {
+                    id: req.user._id,
+                    username: req.user.username,
+                    email: req.user.email
+               }
+          });
+     } else {
+          res.status(401).json({
+               success: false,
+               message: "Not authenticated"
+          });
+     }
 };

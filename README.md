@@ -2,7 +2,7 @@
 
 ![YelpCamp Screenshot](https://github.com/user-attachments/assets/bd2b2f90-b84a-40e9-b2b5-f09591358f8a)
 
-> A full-stack web application built with Node.js, Express, and MongoDB. Discover, review, and share campgrounds around the world — complete with interactive maps, image uploads, user authentication, and responsive UI.
+> A modern full-stack web application built with React.js, Node.js, Express, and MongoDB. Discover, review, and share campgrounds around the world — complete with interactive maps, image uploads, user authentication, and responsive UI.
 
 🔗 **Live Demo:** [https://yelpcamp-3bdc.onrender.com/](https://yelpcamp-3bdc.onrender.com/)
 
@@ -51,13 +51,14 @@ Let me know if you’d like me to generate a version without emojis in headings 
 
 ## 🎯 Project Overview
 
-YelpCamp is a robust, real-world application inspired by Yelp — but tailored for adventurers and nature lovers. It’s more than just CRUD: it showcases modern full-stack development with secure sessions, cloud storage, map integration, and elegant UI/UX.
+YelpCamp is a robust, real-world application inspired by Yelp — but tailored for adventurers and nature lovers. It's more than just CRUD: it showcases modern full-stack development with React frontend, Express API backend, secure authentication, cloud storage, map integration, and elegant UI/UX.
 
 Built from scratch, this project demonstrates mastery in:
-- Backend architecture & RESTful routing
-- Database modeling with associations
-- Frontend templating & interactivity
-- Deployment & environment management
+- **Frontend**: React.js with hooks, context API, and React Router
+- **Backend**: Express.js API with RESTful routes
+- **Database**: MongoDB with Mongoose ODM and associations
+- **Authentication**: Session-based auth with Passport.js
+- **Deployment**: Full-stack architecture & environment management
 
 ---
 
@@ -123,41 +124,76 @@ const styleId = "dataviz-dark"; // Try: "dark-v2", "bright-v2", "outdoor-v2", "s
 ---
 ## Installation & Setup
 
+### 🚀 Full-Stack React + Express Setup
+
 1.  **Clone the repository:**
     ```bash
     git clone https://github.com/Ismail-Ai404/YelpCamp.git
     cd YelpCamp
     ```
 
-2.  **Install NPM packages:**
+2.  **Install backend dependencies:**
     ```bash
     npm install
     ```
 
-3.  **Set up Environment Variables:**
-    Create a `.env` file in the root of the project and add the following variables. You will need to get your own API keys from the respective services.
-
-    ```env
-    # Your MongoDB connection string (local or from Atlas)
-    MONGO_URL=mongodb://localhost:27017/yelp-camp
-
-    # Your Cloudinary credentials
-    CLOUDINARY_CLOUD_NAME=YOUR_CLOUD_NAME
-    CLOUDINARY_KEY=YOUR_API_KEY
-    CLOUDINARY_SECRET=YOUR_API_SECRET
-
-    # Your MapTiler API Key
-    MAPTILER_API_KEY=YOUR_MAPTILER_KEY
-
-    # A secret string for signing the session ID cookie
-    SECRET=thisisasecretstring
+3.  **Install frontend dependencies:**
+    ```bash
+    npm run install:client
     ```
 
-4.  **Run the application:**
+4.  **Set up Environment Variables:**
+    
+    **Backend (.env in root directory):**
+    ```env
+    # Database
+    DB_URL=mongodb://localhost:27017/yelp-camp
+    
+    # Cloudinary for image storage
+    CLOUDINARY_CLOUD_NAME=your_cloud_name
+    CLOUDINARY_KEY=your_api_key
+    CLOUDINARY_SECRET=your_api_secret
+    
+    # MapTiler for maps
+    MAPTILER_API_KEY=your_maptiler_key
+    
+    # Session secret
+    SECRET=your_session_secret_string
+    
+    # Client URL (for CORS)
+    CLIENT_URL=http://localhost:5173
+    
+    # Server port
+    PORT=3000
+    ```
+    
+    **Frontend (client/.env):**
+    ```env
+    # Backend API URL
+    VITE_API_URL=http://localhost:3000
+    
+    # MapTiler API Key (for client-side maps)
+    VITE_MAPTILER_API_KEY=your_maptiler_key
+    ```
+
+5.  **Development - Run both frontend and backend:**
     ```bash
+    npm run dev:full
+    ```
+    - Backend API: `http://localhost:3000`
+    - React frontend: `http://localhost:5173`
+    
+6.  **Production - Build and serve:**
+    ```bash
+    npm run build
     npm start
     ```
-    The application should now be running on `http://localhost:3000`.
+
+### 🔧 Individual Commands
+- `npm run server` - Run backend only
+- `npm run client` - Run frontend only
+- `npm run build` - Build React for production
+- `npm run dev` - Run backend with nodemon
 
 ---
 

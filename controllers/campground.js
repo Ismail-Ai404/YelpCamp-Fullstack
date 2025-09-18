@@ -14,19 +14,13 @@ if (!maptilerApiKey) {
 
 config.apiKey = maptilerApiKey;
 
-module.exports.index = async (req, res) => {
-     const campgrounds = await Campground.find({});
-     res.render("campground/index", { campgrounds });
-     if (!campgrounds) {
-          // console.error(err);
-          req.flash("error", "Error fetching campgrounds.");
-          res.redirect("/");
-     }
-};
-
-module.exports.renderNewForm = (req, res) => {
-     res.render("campground/new");
-};
+module.exports.index = catchAsync(async (req, res) => {
+     const campgrounds = await Campground.find({}).populate('author', 'username');
+     res.json({
+          success: true,
+          campgrounds
+     });
+});
 
 module.exports.createCampground = catchAsync(async (req, res) => {
      const { title, location, description, price } = req.body;
@@ -49,11 +43,12 @@ module.exports.createCampground = catchAsync(async (req, res) => {
                type: "Point",
                coordinates: [lon, lat],
           };
-          // console.log("Geocoded data:", geoData); // 👈 Debug check
      } catch (err) {
           console.error("Error during geocoding:", err);
-          req.flash("error", "Invalid location. Could not geocode.");
-          return res.redirect("/campgrounds/new");
+          return res.status(400).json({
+               success: false,
+               message: "Invalid location. Could not geocode."
+          });
      }
 
      const campground = new Campground({
@@ -61,24 +56,20 @@ module.exports.createCampground = catchAsync(async (req, res) => {
           location,
           description,
           price,
-          geometry: geoData, // new field
-          images: req.files.map((f) => ({ url: f.path, filename: f.filename })),
+          geometry: geoData,
+          images: req.files ? req.files.map((f) => ({ url: f.path, filename: f.filename })) : [],
           author: req.user._id,
      });
 
-     // if (!title || !location) {
-     //      throw new ExpressError("Invalid Camground Input", 400);
-     // }
-     if (!campground) {
-          // console.error(err);
-          req.flash("error", "Failed to create campground.");
-          res.redirect("/campgrounds");
-     }
-     // console.log(campground);
-
      await campground.save();
-     req.flash("success", "Campground created successfully!");
-     res.redirect(`/campgrounds/${campground._id}`);
+     
+     const populatedCampground = await Campground.findById(campground._id).populate('author', 'username');
+     
+     res.status(201).json({
+          success: true,
+          message: "Campground created successfully!",
+          campground: populatedCampground
+     });
 });
 
 module.exports.showCampground = catchAsync(async (req, res) => {
@@ -89,44 +80,40 @@ module.exports.showCampground = catchAsync(async (req, res) => {
           .populate("author");
 
      if (!campground) {
-          // console.error(err);
-          req.flash("error", "Campground not found.");
-          // throw new ExpressError("Campground not found", 404);
-          return res.redirect("/campgrounds");
+          return res.status(404).json({
+               success: false,
+               message: "Campground not found."
+          });
      }
-     // console.log(campground);
-     res.render("campground/show", { campground });
-});
-
-module.exports.renderEditForm = catchAsync(async (req, res) => {
-     const { id } = req.params;
-     const campground = await Campground.findById(id);
-     if (!campground) {
-          req.flash("error", "Campground not found.");
-          return res.redirect("/campgrounds");
-     }
-
-     res.render("campground/edit", { campground });
+     
+     res.json({
+          success: true,
+          campground
+     });
 });
 
 module.exports.updateCampground = catchAsync(async (req, res) => {
      const { id } = req.params;
-     const { title, location, description, price, images } = req.body;
+     const { title, location, description, price } = req.body;
 
      const campground = await Campground.findByIdAndUpdate(
           id,
           { title, location, description, price },
           { new: true }
-     );
+     ).populate('author', 'username');
 
      if (!campground) {
-          // console.error(err);
-          req.flash("error", "Error updating campground.");
-          res.redirect("/campgrounds");
+          return res.status(404).json({
+               success: false,
+               message: "Campground not found."
+          });
      }
 
-     const imgs = req.files.map((f) => ({ url: f.path, filename: f.filename }));
-     await campground.images.push(...imgs);
+     if (req.files && req.files.length > 0) {
+          const imgs = req.files.map((f) => ({ url: f.path, filename: f.filename }));
+          campground.images.push(...imgs);
+     }
+     
      if (req.body.deleteImages) {
           // Delete images from Cloudinary
           for (let filename of req.body.deleteImages) {
@@ -136,26 +123,31 @@ module.exports.updateCampground = catchAsync(async (req, res) => {
                $pull: { images: { filename: { $in: req.body.deleteImages } } },
           });
      }
+     
      await campground.save();
 
-     req.flash("success", "Campground updated successfully!");
-     res.redirect(`/campgrounds/${campground._id}`);
+     res.json({
+          success: true,
+          message: "Campground updated successfully!",
+          campground
+     });
 });
 
 module.exports.deleteCampground = catchAsync(async (req, res) => {
-     // This one command will now trigger the middleware
-
      const { id } = req.params;
      const campground = await Campground.findById(id);
+     
      if (!campground) {
-          req.flash("error", "Campground not found.");
-          return res.redirect("/campgrounds");
+          return res.status(404).json({
+               success: false,
+               message: "Campground not found."
+          });
      }
 
-     await Campground.findByIdAndDelete(req.params.id);
-     req.flash(
-          "success",
-          "Campground and all its reviews deleted successfully!"
-     );
-     res.redirect("/campgrounds");
+     await Campground.findByIdAndDelete(id);
+     
+     res.json({
+          success: true,
+          message: "Campground and all its reviews deleted successfully!"
+     });
 });

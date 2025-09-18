@@ -12,24 +12,19 @@ const { validateUser } = require("../middlewares/schemaValidation");
 // const { isLoggedIn } = require("../middleware/login");
 const { storeReturnTo } = require("../middlewares/sessionStore.js");
 
-router
-     .route("/register")
-     .get(ctlAuths.renderRegisterForm)
-     .post(validateUser, ctlAuths.registerUser);
+router.post("/register", validateUser, ctlAuths.registerUser);
 
-router
-     .route("/login")
-     .get(ctlAuths.renderLoginForm)
-     .post(
-          storeReturnTo,
-          passport.authenticate("local", {
-               // successRedirect: "/campgrounds",
-               failureRedirect: "/login",
-               failureFlash: true,
-          }),
-          ctlAuths.loginUser
-     );
+router.post(
+     "/login",
+     passport.authenticate("local", {
+          failureMessage: true
+     }),
+     ctlAuths.loginUser
+);
 
-router.get("/logout", ctlAuths.logoutUser);
+router.post("/logout", ctlAuths.logoutUser);
+
+// Get current user
+router.get("/me", ctlAuths.getCurrentUser);
 
 module.exports = router;

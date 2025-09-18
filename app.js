@@ -4,13 +4,12 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const express = require("express");
-
+const cors = require("cors");
 const path = require("path");
 
 const mongoose = require("mongoose");
 
 const methodOverride = require("method-override");
-const ejsMate = require("ejs-mate");
 
 const session = require("express-session");
 const flash = require("connect-flash");
@@ -47,14 +46,16 @@ db.once("open", () => {
      console.log("Database connected");
 });
 
-// View engine setup
-app.engine("ejs", ejsMate); // layouts support
-app.set("view engine", "ejs");
+// CORS configuration for React frontend
+app.use(cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173", // Vite default port
+    credentials: true
+}));
 
-app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Middleware
+app.use(express.json()); // parse JSON data
 app.use(express.urlencoded({ extended: true })); // parse form data
 app.use(methodOverride("_method"));
 
@@ -195,24 +196,14 @@ app.use(
      })
 );
 
-// Root route
-app.get("/", (req, res) => {
-     res.render("home");
-});
-
-// app.get("/fakeuser", async (req, res) => {
-//      const user = new User({ email: "@gmail.com", username: "yon" });
-//      const newUser = await User.register(user, "chicken");
-//      res.send(newUser);
-// });
-
-app.use("/", authRoutes);
+// API Routes
+app.use("/api/auth", authRoutes);
 
 // Campground routes
-app.use("/campgrounds", campgroundRoutes);
+app.use("/api/campgrounds", campgroundRoutes);
 
 // Review routes
-app.use("/campgrounds/:id/reviews", reviewRoutes);
+app.use("/api/campgrounds/:id/reviews", reviewRoutes);
 
 // Catch-all handler (404)
 app.all(/.*/, (req, res, next) => {
@@ -223,7 +214,10 @@ app.use((err, req, res, next) => {
      console.log(err);
      const { statusCode = 500 } = err;
      if (!err.message) err.message = "Something went wrong! ";
-     res.status(statusCode).render("error", { err });
+     res.status(statusCode).json({ 
+          error: err.message,
+          statusCode 
+     });
 });
 
 const port = process.env.PORT || 3000;
