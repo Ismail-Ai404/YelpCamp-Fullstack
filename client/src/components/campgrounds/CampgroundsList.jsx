@@ -38,148 +38,261 @@ const CampgroundsList = () => {
 
   if (loading) {
     return (
-      <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '80vh' }}>
-        <div className="text-center">
-          <Spinner animation="border" variant="success" className="spinner-border mb-3" />
-          <p className="text-muted fs-5">Loading campgrounds...</p>
-        </div>
-      </Container>
+      <Box 
+        sx={{
+          minHeight: '80vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Box sx={{ textAlign: 'center' }}>
+          <Box 
+            sx={{
+              width: '60px',
+              height: '60px',
+              border: '4px solid var(--mui-success-light)',
+              borderTop: '4px solid var(--mui-success-main)',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+              margin: '0 auto 1rem'
+            }}
+          />
+          <Typography variant="h6" sx={{ color: 'var(--mui-grey-600)' }}>
+            Loading campgrounds...
+          </Typography>
+        </Box>
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <Container className="py-5">
-        <Row className="justify-content-center">
-          <Col md={6}>
-            <Alert variant="danger" className="text-center">
-              <Alert.Heading>
-                <i className="fas fa-exclamation-triangle me-2"></i>
-                Error
-              </Alert.Heading>
-              <p>{error}</p>
-              <Button as={Link} to="/" variant="outline-danger">
-                <i className="fas fa-home me-2"></i>
-                Go Home
-              </Button>
-            </Alert>
-          </Col>
-        </Row>
+      <Container maxWidth="md" sx={{ paddingY: '3rem' }}>
+        <Box 
+          sx={{
+            textAlign: 'center',
+            backgroundColor: 'var(--mui-error-light)',
+            border: '1px solid var(--mui-error-main)',
+            borderRadius: '8px',
+            padding: '2rem',
+            color: 'var(--mui-error-dark)'
+          }}
+        >
+          <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: '1rem' }}>
+            <i className="fas fa-exclamation-triangle" style={{ marginRight: '8px' }}></i>
+            Error
+          </Typography>
+          <Typography variant="body1" sx={{ marginBottom: '2rem' }}>
+            {error}
+          </Typography>
+          <Button
+            component={Link}
+            to="/"
+            variant="outlined"
+            color="error"
+            sx={{ textTransform: 'none' }}
+          >
+            <i className="fas fa-home" style={{ marginRight: '8px' }}></i>
+            Go Home
+          </Button>
+        </Box>
       </Container>
     );
   }
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
-      <Container fluid className="py-5 px-3 px-md-5">
-        <Row className="justify-content-center">
-          <Col xs={12} xl={11} xxl={10}>
-            {/* Header */}
-            <div className="mb-5">
-              <Row className="align-items-center">
-                <Col xs={12} md={8}>
-                  <h1 className="display-4 fw-bold mb-3 mb-md-0">
-                    <i className="fas fa-mountain text-success me-3"></i>
-                    All Campgrounds
-                  </h1>
-                  <p className="text-muted fs-5 d-none d-md-block">
-                    Discover amazing campgrounds around the world
-                  </p>
-                </Col>
-                <Col xs={12} md={4} className="text-md-end">
-                  <Button
-                    as={Link}
-                    to="/campgrounds/new"
-                    variant="success"
-                    size="lg"
-                    className="w-100 w-md-auto"
-                  >
-                    <i className="fas fa-plus me-2"></i>
-                    Add New Campground
-                  </Button>
-                </Col>
-              </Row>
-            </div>
+    <Box sx={{ minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
+      <Container maxWidth="xl" sx={{ paddingY: '3rem' }}>
+        {/* Header */}
+        <Box sx={{ marginBottom: '3rem' }}>
+          <Grid container spacing={3} sx={{ alignItems: 'center' }}>
+            <Grid item xs={12} md={8}>
+              <Typography 
+                variant="h3" 
+                component="h1" 
+                sx={{ 
+                  fontWeight: 'bold', 
+                  marginBottom: { xs: '0.5rem', md: '0' },
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                <i className="fas fa-mountain" style={{ color: 'var(--mui-success-main)', marginRight: '16px' }}></i>
+                All Campgrounds
+              </Typography>
+              <Typography 
+                variant="h6" 
+                sx={{ 
+                  color: 'var(--mui-grey-600)',
+                  display: { xs: 'none', md: 'block' }
+                }}
+              >
+                Discover amazing campgrounds around the world
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={4} sx={{ textAlign: { md: 'right' } }}>
+              <Button
+                component={Link}
+                to="/campgrounds/new"
+                variant="contained"
+                color="success"
+                size="large"
+                sx={{
+                  width: { xs: '100%', md: 'auto' },
+                  textTransform: 'none',
+                  fontSize: '1rem',
+                  fontWeight: 'bold'
+                }}
+              >
+                <i className="fas fa-plus" style={{ marginRight: '8px' }}></i>
+                Add New Campground
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
 
-            {/* Content */}
-            {campgrounds.length === 0 ? (
-              <div className="text-center py-5">
-                <i className="fas fa-campground text-muted display-1 mb-4"></i>
-                <h3 className="display-6 mb-3">No campgrounds yet!</h3>
-                <p className="text-muted fs-5 mb-4">
-                  Be the first to add a campground and start sharing your outdoor adventures.
-                </p>
-                <Button as={Link} to="/campgrounds/new" variant="success" size="lg">
-                  <i className="fas fa-plus me-2"></i>
-                  Add New Campground
-                </Button>
-              </div>
-            ) : (
-              <Row className="campground-grid">
-                {campgrounds.map((campground) => (
-                  <Col xs={12} sm={6} lg={4} xl={3} key={campground._id} className="mb-4">
-                    <Card className="h-100 card">
-                      {campground.images && campground.images.length > 0 ? (
-                        <Card.Img
-                          variant="top"
-                          src={campground.images[0].url}
-                          style={{ height: '250px', objectFit: 'cover' }}
-                          alt={campground.title}
-                        />
-                      ) : (
-                        <div 
-                          className="bg-light d-flex align-items-center justify-content-center" 
-                          style={{ height: '250px' }}
-                        >
-                          <i className="fas fa-image text-muted display-4"></i>
-                        </div>
-                      )}
-                      
-                      <Card.Body className="d-flex flex-column">
-                        <Card.Title className="h5 fw-bold">{campground.title}</Card.Title>
-                        
-                        <Card.Text className="text-muted mb-2">
-                          <i className="fas fa-map-marker-alt text-success me-1"></i>
-                          {campground.location}
-                        </Card.Text>
-                        
-                        <Card.Text className="flex-grow-1 mb-3">
-                          {campground.description.length > 100
-                            ? `${campground.description.substring(0, 100)}...`
-                            : campground.description}
-                        </Card.Text>
-                        
-                        <div className="d-flex justify-content-between align-items-center mb-2">
-                          <strong className="text-success fs-5">
-                            ${campground.price}
-                            <small className="text-muted">/night</small>
-                          </strong>
-                          <Button 
-                            as={Link} 
-                            to={`/campgrounds/${campground._id}`} 
-                            variant="primary"
-                            size="sm"
-                          >
-                            View Details
-                          </Button>
-                        </div>
-                        
-                        {campground.author && (
-                          <small className="text-muted">
-                            <i className="fas fa-user me-1"></i>
-                            By {campground.author.username}
-                          </small>
-                        )}
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-            )}
-          </Col>
-        </Row>
+        {/* Content */}
+        {campgrounds.length === 0 ? (
+          <Box sx={{ textAlign: 'center', paddingY: '4rem' }}>
+            <i 
+              className="fas fa-campground" 
+              style={{ 
+                fontSize: '6rem', 
+                color: 'var(--mui-grey-400)',
+                marginBottom: '2rem',
+                display: 'block'
+              }}
+            ></i>
+            <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '1rem' }}>
+              No campgrounds yet!
+            </Typography>
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                color: 'var(--mui-grey-600)', 
+                marginBottom: '2rem',
+                maxWidth: '600px',
+                margin: '0 auto 2rem'
+              }}
+            >
+              Be the first to add a campground and start sharing your outdoor adventures.
+            </Typography>
+            <Button
+              component={Link}
+              to="/campgrounds/new"
+              variant="contained"
+              color="success"
+              size="large"
+              sx={{ textTransform: 'none', fontSize: '1.1rem' }}
+            >
+              <i className="fas fa-plus" style={{ marginRight: '8px' }}></i>
+              Add New Campground
+            </Button>
+          </Box>
+        ) : (
+          <Grid container spacing={3}>
+            {campgrounds.map((campground) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={campground._id}>
+                <Card 
+                  sx={{ 
+                    height: '100%', 
+                    display: 'flex',
+                    flexDirection: 'column',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: 'var(--mui-shadow-6)'
+                    }
+                  }}
+                >
+                  {campground.images && campground.images.length > 0 ? (
+                    <CardMedia
+                      image={campground.images[0].url}
+                      title={campground.title}
+                      height="250px"
+                    />
+                  ) : (
+                    <Box 
+                      sx={{
+                        height: '250px',
+                        backgroundColor: 'var(--mui-grey-200)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <i 
+                        className="fas fa-image" 
+                        style={{ fontSize: '4rem', color: 'var(--mui-grey-400)' }}
+                      ></i>
+                    </Box>
+                  )}
+                  
+                  <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                    <Typography variant="h6" component="h3" sx={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                      {campground.title}
+                    </Typography>
+                    
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        color: 'var(--mui-grey-600)', 
+                        marginBottom: '0.5rem',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <i className="fas fa-map-marker-alt" style={{ color: 'var(--mui-success-main)', marginRight: '4px' }}></i>
+                      {campground.location}
+                    </Typography>
+                    
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        flexGrow: 1, 
+                        marginBottom: '1rem',
+                        color: 'var(--mui-grey-700)'
+                      }}
+                    >
+                      {campground.description.length > 100
+                        ? `${campground.description.substring(0, 100)}...`
+                        : campground.description}
+                    </Typography>
+                    
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                      <Typography variant="h6" sx={{ color: 'var(--mui-success-main)', fontWeight: 'bold' }}>
+                        ${campground.price}
+                        <Typography component="span" variant="body2" sx={{ color: 'var(--mui-grey-600)', fontWeight: 'normal' }}>
+                          /night
+                        </Typography>
+                      </Typography>
+                      <Button 
+                        component={Link} 
+                        to={`/campgrounds/${campground._id}`} 
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        sx={{ textTransform: 'none' }}
+                      >
+                        View Details
+                      </Button>
+                    </Box>
+                    
+                    {campground.author && (
+                      <Typography variant="body2" sx={{ color: 'var(--mui-grey-500)', fontSize: '0.875rem' }}>
+                        <i className="fas fa-user" style={{ marginRight: '4px' }}></i>
+                        By {campground.author.username}
+                      </Typography>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Container>
-    </div>
+    </Box>
   );
 };
 
