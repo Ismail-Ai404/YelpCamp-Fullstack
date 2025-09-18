@@ -208,8 +208,52 @@ export const Box = ({
   </Component>
 );
 
+// Avatar component
+export const Avatar = ({ 
+  children, 
+  src,
+  alt,
+  sx = {},
+  className = ''
+}) => {
+  const avatarStyle = {
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+    backgroundColor: 'var(--mui-grey-400)',
+    color: 'white',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    ...sx
+  };
+
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt={alt}
+        className={`mui-avatar ${className}`}
+        style={avatarStyle}
+      />
+    );
+  }
+
+  return (
+    <div 
+      className={`mui-avatar ${className}`}
+      style={avatarStyle}
+    >
+      {children}
+    </div>
+  );
+};
+
 // Rating component
-export const Rating = ({ 
+export const Rating = ({
   value = 0, 
   onChange, 
   max = 5, 

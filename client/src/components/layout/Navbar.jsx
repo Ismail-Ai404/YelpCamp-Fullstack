@@ -34,30 +34,38 @@ const Navigation = () => {
     { to: '/campgrounds', text: 'Campgrounds', icon: 'fas fa-mountain' }
   ];
 
-  const renderNavLinks = (mobile = false) => (
-    <Box sx={{ display: 'flex', flexDirection: mobile ? 'column' : 'row', gap: mobile ? '16px' : '24px' }}>
-      {navLinks.map(link => (
-        <Button
-          key={link.to}
-          component={Link}
-          to={link.to}
-          variant="text"
-          onClick={mobile ? handleDrawerClose : undefined}
-          sx={{
-            color: 'white',
-            textTransform: 'none',
-            fontSize: '1rem',
-            fontWeight: 500,
-            justifyContent: mobile ? 'flex-start' : 'center',
-            padding: mobile ? '12px 16px' : '8px 16px'
-          }}
-        >
-          <i className={`${link.icon} ${mobile ? 'me-3' : 'me-2'}`} style={{ fontSize: '1rem' }}></i>
-          {link.text}
-        </Button>
-      ))}
-    </Box>
-  );
+  const userNavLinks = [
+    { to: '/dashboard', text: 'Dashboard', icon: 'fas fa-tachometer-alt' }
+  ];
+
+  const renderNavLinks = (mobile = false) => {
+    const linksToShow = user ? [...navLinks, ...userNavLinks] : navLinks;
+    
+    return (
+      <Box sx={{ display: 'flex', flexDirection: mobile ? 'column' : 'row', gap: mobile ? '16px' : '24px' }}>
+        {linksToShow.map(link => (
+          <Button
+            key={link.to}
+            component={Link}
+            to={link.to}
+            variant="text"
+            onClick={mobile ? handleDrawerClose : undefined}
+            sx={{
+              color: 'white',
+              textTransform: 'none',
+              fontSize: '1rem',
+              fontWeight: 500,
+              justifyContent: mobile ? 'flex-start' : 'center',
+              padding: mobile ? '12px 16px' : '8px 16px'
+            }}
+          >
+            <i className={`${link.icon} ${mobile ? 'me-3' : 'me-2'}`} style={{ fontSize: '1rem' }}></i>
+            {link.text}
+          </Button>
+        ))}
+      </Box>
+    );
+  };
 
   const renderAuthSection = (mobile = false) => (
     <Box sx={{ display: 'flex', flexDirection: mobile ? 'column' : 'row', gap: mobile ? '12px' : '16px', alignItems: mobile ? 'stretch' : 'center' }}>
