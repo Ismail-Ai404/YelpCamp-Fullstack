@@ -22,16 +22,23 @@ export const AuthProvider = ({ children }) => {
         const response = await api.get('/auth/me');
         if (response.data.success) {
           setUser(response.data.user);
+        } else {
+          setUser(null);
         }
       } catch (error) {
-        console.log('Not authenticated');
+        console.log('Auth check failed:', error.message);
+        setUser(null);
+        // If server is not available, don't keep trying
+        if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
+          console.warn('Backend server not available');
+        }
       } finally {
         setLoading(false);
       }
     };
 
     checkAuth();
-  }, []);
+  }, []); // Empty dependency array to run only once
 
   const login = async (username, password) => {
     try {

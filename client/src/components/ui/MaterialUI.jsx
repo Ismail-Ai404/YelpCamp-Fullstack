@@ -207,3 +207,64 @@ export const Box = ({
     {children}
   </Component>
 );
+
+// Rating component
+export const Rating = ({ 
+  value = 0, 
+  onChange, 
+  max = 5, 
+  readOnly = false,
+  className = '',
+  sx = {} 
+}) => {
+  const [hoverValue, setHoverValue] = useState(0);
+
+  const handleStarClick = (starValue) => {
+    if (!readOnly && onChange) {
+      onChange(starValue);
+    }
+  };
+
+  const handleStarHover = (starValue) => {
+    if (!readOnly) {
+      setHoverValue(starValue);
+    }
+  };
+
+  const handleStarLeave = () => {
+    if (!readOnly) {
+      setHoverValue(0);
+    }
+  };
+
+  return (
+    <div 
+      className={`mui-rating ${readOnly ? 'mui-rating-readonly' : ''} ${className}`}
+      style={sx}
+    >
+      {Array.from({ length: max }, (_, index) => {
+        const starValue = index + 1;
+        const isActive = (hoverValue || value) >= starValue;
+        
+        return (
+          <span
+            key={starValue}
+            className={`mui-rating-star ${isActive ? 'mui-rating-star-active' : ''}`}
+            onClick={() => handleStarClick(starValue)}
+            onMouseEnter={() => handleStarHover(starValue)}
+            onMouseLeave={handleStarLeave}
+            style={{
+              cursor: readOnly ? 'default' : 'pointer',
+              color: isActive ? '#ffc107' : '#e0e0e0',
+              fontSize: '1.5rem',
+              marginRight: '4px',
+              transition: 'color 0.2s ease'
+            }}
+          >
+            ★
+          </span>
+        );
+      })}
+    </div>
+  );
+};

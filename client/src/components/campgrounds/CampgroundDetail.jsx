@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
+import Map from '../ui/Map';
+import ReviewForm from '../reviews/ReviewForm';
+import ReviewsList from '../reviews/ReviewsList';
 import {
   Container,
   Card,
@@ -14,6 +17,7 @@ import {
 
 const CampgroundDetail = () => {
   const [campground, setCampground] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState(false);
@@ -28,6 +32,17 @@ const CampgroundDetail = () => {
         const response = await api.get(`/campgrounds/${id}`);
         if (response.data.success) {
           setCampground(response.data.campground);
+          
+          // Fetch reviews for this campground
+          try {
+            const reviewsResponse = await api.get(`/campgrounds/${id}/reviews`);
+            if (reviewsResponse.data.success) {
+              setReviews(reviewsResponse.data.reviews || []);
+            }
+          } catch (reviewErr) {
+            console.error('Failed to fetch reviews:', reviewErr);
+            // Don't set error state for reviews, just continue
+          }
         }
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to fetch campground');
@@ -38,6 +53,16 @@ const CampgroundDetail = () => {
 
     fetchCampground();
   }, [id]);
+
+  // Handle review submission
+  const handleReviewSubmitted = (newReview) => {
+    setReviews(prev => [newReview, ...prev]);
+  };
+
+  // Handle review deletion
+  const handleReviewDeleted = (reviewId) => {
+    setReviews(prev => prev.filter(review => review._id !== reviewId));
+  };
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this campground?')) {
@@ -222,9 +247,7 @@ const CampgroundDetail = () => {
                   <i className="fas fa-map-marked-alt" style={{ marginRight: '12px', color: 'var(--mui-primary-main)' }}></i>
                   Location
                 </Typography>
-                <Typography variant="body1" sx={{ color: 'var(--mui-grey-600)', marginBottom: '1.5rem' }}>
-                  Interactive map coming soon...
-                </Typography>
+                
                 <Box
                   sx={{
                     backgroundColor: 'var(--mui-primary-main)',
@@ -234,12 +257,30 @@ const CampgroundDetail = () => {
                     display: 'inline-flex',
                     alignItems: 'center',
                     fontSize: '0.9rem',
-                    fontWeight: 600
+                    fontWeight: 600,
+                    marginBottom: '1.5rem'
                   }}
                 >
                   <i className="fas fa-map-marker-alt" style={{ marginRight: '8px' }}></i>
                   {campground.location}
                 </Box>
+
+                {/* Interactive Map */}
+                {campground.geometry && campground.geometry.coordinates && (
+                  <Box sx={{ height: '300px', borderRadius: '12px', overflow: 'hidden' }}>
+                    <Map 
+                      campgrounds={[{
+                        ...campground,
+                        popupText: `<strong>${campground.title}</strong><br/>${campground.location}`
+                      }]} 
+                      center={[
+                        campground.geometry.coordinates[1], 
+                        campground.geometry.coordinates[0]
+                      ]}
+                      zoom={12}
+                    />
+                  </Box>
+                )}
               </CardContent>
             </Card>
           </Grid>
@@ -331,28 +372,44 @@ const CampgroundDetail = () => {
                 <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: '1rem', display: 'flex', alignItems: 'center' }}>
                   <i className="fas fa-star" style={{ marginRight: '12px', color: '#ffc107' }}></i>
                   Reviews
+                  {reviews.length > 0 && (
+                    <Box
+                      component="span"
+                      sx={{
+                        backgroundColor: 'var(--mui-primary-main)',
+                        color: 'white',
+                        borderRadius: '50%',
+                        width: '28px',
+                        height: '28px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.9rem',
+                        fontWeight: 'bold',
+                        marginLeft: '12px'
+                      }}
+                    >
+                      {reviews.length}
+                    </Box>
+                  )}
                 </Typography>
                 
-                <Typography variant="body1" sx={{ color: 'var(--mui-grey-600)', marginBottom: '1.5rem' }}>
-                  Review system coming soon...
-                </Typography>
-                
+                {/* Review Form - Only show for logged-in users who are not the owner */}
                 {user && !isOwner && (
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    disabled
-                    sx={{
-                      textTransform: 'none',
-                      fontWeight: 600,
-                      padding: '10px 20px',
-                      borderRadius: '25px'
-                    }}
-                  >
-                    <i className="fas fa-plus" style={{ marginRight: '8px' }}></i>
-                    Leave a Review
-                  </Button>
+                  <Box sx={{ marginBottom: '2rem' }}>
+                    <ReviewForm 
+                      campgroundId={campground._id}
+                      onReviewSubmitted={handleReviewSubmitted}
+                    />
+                  </Box>
                 )}
+                
+                {/* Reviews List */}
+                <ReviewsList 
+                  reviews={reviews}
+                  campgroundId={campground._id}
+                  onReviewDeleted={handleReviewDeleted}
+                />
               </CardContent>
             </Card>
           </Grid>

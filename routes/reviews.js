@@ -9,6 +9,9 @@ const { validateReview } = require("../middlewares/schemaValidation");
 
 const ctlReviews = require("../controllers/review");
 
+// Get all reviews for a campground
+router.get("", ctlReviews.getReviews);
+
 // Create review
 router.post("", isLoggedIn, validateReview, ctlReviews.createReview);
 

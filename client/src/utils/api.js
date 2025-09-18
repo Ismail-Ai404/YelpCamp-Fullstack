@@ -2,9 +2,9 @@ import axios from 'axios';
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' 
-    ? '/api'  // In production, use relative path
-    : 'http://localhost:3000/api', // In development, use full URL
+  baseURL: import.meta.env.VITE_API_URL 
+    ? `${import.meta.env.VITE_API_URL}/api` 
+    : 'http://localhost:3000/api', // Fallback for development
   withCredentials: true, // Important for session-based auth
   timeout: 10000, // 10 second timeout
   headers: {
@@ -32,9 +32,10 @@ api.interceptors.response.use(
   (error) => {
     console.error('Response error:', error.response || error);
     
-    if (error.response?.status === 401) {
-      // Redirect to login on unauthorized
-      window.location.href = '/login';
+    // Don't redirect on auth check failures, just let them fail silently
+    if (error.response?.status === 401 && !error.config?.url?.includes('/auth/me')) {
+      // Only redirect to login for actual protected route failures, not auth checks
+      console.warn('Unauthorized access, but not redirecting for auth check');
     }
     
     return Promise.reject(error);

@@ -158,6 +158,7 @@ const connectSrcUrls = [
      "https://a.tiles.mapbox.com/",
      "https://b.tiles.mapbox.com/",
      "https://events.mapbox.com/",
+     "https://api.maptiler.com/",
 ];
 const fontSrcUrls = [
      "https://fonts.gstatic.com/", // (if you use Google Fonts)
@@ -188,6 +189,7 @@ app.use(
                     "https://a.tile.openstreetmap.org/",
                     "https://b.tile.openstreetmap.org/",
                     "https://c.tile.openstreetmap.org/",
+                    "https://api.maptiler.com/", // <-- For MapTiler tiles
                     // You can also add "https://basemaps.cartocdn.com" if tiles load from that root
                ],
                fontSrc: ["'self'", ...fontSrcUrls],
