@@ -698,6 +698,33 @@
 .mui-elevation-3 { box-shadow: var(--mui-shadow-3); }
 .mui-elevation-4 { box-shadow: var(--mui-shadow-4); }
 .mui-elevation-6 { box-shadow: var(--mui-shadow-6); }
+
+/* Loading Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
 .mui-elevation-8 { box-shadow: var(--mui-shadow-8); }
 
 /* Loading Spinner Animation */

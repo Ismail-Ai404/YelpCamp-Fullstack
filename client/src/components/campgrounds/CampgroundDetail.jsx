@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 import Map from '../ui/Map';
+import ImageGallery from '../ui/ImageGallery';
 import ReviewForm from '../reviews/ReviewForm';
 import ReviewsList from '../reviews/ReviewsList';
 import {
@@ -187,40 +188,14 @@ const CampgroundDetail = () => {
         <Grid container spacing={4}>
           {/* Left Column - Images and Map */}
           <Grid item xs={12} lg={6}>
-            {/* Images */}
+            {/* Images Gallery */}
             {campground.images && campground.images.length > 0 ? (
               <Box sx={{ marginBottom: '2rem' }}>
-                <Box
-                  component="img"
-                  src={campground.images[0].url}
-                  alt={campground.title}
-                  sx={{
-                    width: '100%',
-                    height: '400px',
-                    objectFit: 'cover',
-                    borderRadius: '16px',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
-                  }}
+                <ImageGallery 
+                  images={campground.images} 
+                  title={campground.title}
+                  maxPreview={4}
                 />
-                {campground.images.length > 1 && (
-                  <Box sx={{ display: 'flex', gap: '8px', marginTop: '12px', flexWrap: 'wrap' }}>
-                    {campground.images.slice(1, 4).map((image, index) => (
-                      <Box
-                        key={index}
-                        component="img"
-                        src={image.url}
-                        alt={`${campground.title} ${index + 2}`}
-                        sx={{
-                          width: 'calc(33.33% - 6px)',
-                          height: '120px',
-                          objectFit: 'cover',
-                          borderRadius: '8px',
-                          cursor: 'pointer'
-                        }}
-                      />
-                    ))}
-                  </Box>
-                )}
               </Box>
             ) : (
               <Box
