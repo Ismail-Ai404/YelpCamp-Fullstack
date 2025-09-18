@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import {
+  Container,
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  Typography,
+  Box
+} from '../ui/MaterialUI';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -52,95 +60,153 @@ const Register = () => {
   };
 
   return (
-    <Container className="py-5">
-      <Row className="justify-content-center">
-        <Col xs={12} sm={8} md={6} lg={5}>
-          <Card className="shadow-lg border-0">
-            <Card.Body className="p-5">
-              <div className="text-center mb-4">
-                <h2 className="fw-bold text-primary">Join YelpCamp</h2>
-                <p className="text-muted">Create your account to start exploring</p>
-              </div>
-              
-              {error && <Alert variant="danger">{error}</Alert>}
-              
-              <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-4">
-                  <Form.Label className="fw-semibold">Email</Form.Label>
-                  <Form.Control
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    autoFocus
-                    size="lg"
-                    className="py-3"
-                  />
-                </Form.Group>
+    <Box 
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        backgroundColor: '#f5f5f5',
+        padding: { xs: '1rem', sm: '2rem' }
+      }}
+    >
+      <Container maxWidth="sm">
+        <Card sx={{ boxShadow: '0 8px 32px rgba(0,0,0,0.1)', borderRadius: '12px' }}>
+          <CardContent sx={{ padding: { xs: '2rem', sm: '3rem' } }}>
+            {/* Header */}
+            <Box sx={{ textAlign: 'center', marginBottom: '2rem' }}>
+              <Typography 
+                variant="h4" 
+                component="h1" 
+                sx={{ 
+                  fontWeight: 'bold', 
+                  color: 'var(--mui-primary-main)', 
+                  marginBottom: '0.5rem' 
+                }}
+              >
+                Join YelpCamp
+              </Typography>
+              <Typography variant="body1" sx={{ color: 'var(--mui-grey-600)' }}>
+                Create your account to start exploring
+              </Typography>
+            </Box>
 
-                <Form.Group className="mb-4">
-                  <Form.Label className="fw-semibold">Username</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    required
-                    size="lg"
-                    className="py-3"
-                  />
-                </Form.Group>
+            {/* Error Alert */}
+            {error && (
+              <Box 
+                sx={{
+                  backgroundColor: 'var(--mui-error-light)',
+                  color: 'var(--mui-error-dark)',
+                  padding: '1rem',
+                  borderRadius: '4px',
+                  marginBottom: '1.5rem',
+                  border: '1px solid var(--mui-error-main)'
+                }}
+              >
+                <Typography variant="body2">{error}</Typography>
+              </Box>
+            )}
 
-                <Form.Group className="mb-4">
-                  <Form.Label className="fw-semibold">Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                    minLength={6}
-                    size="lg"
-                    className="py-3"
-                  />
-                  <Form.Text className="text-muted">
-                    Password must be at least 6 characters long.
-                  </Form.Text>
-                </Form.Group>
+            {/* Register Form */}
+            <Box component="form" onSubmit={handleSubmit}>
+              <Box sx={{ marginBottom: '1.5rem' }}>
+                <TextField
+                  label="Email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  autoFocus
+                  fullWidth
+                  variant="outlined"
+                />
+              </Box>
 
-                <Form.Group className="mb-4">
-                  <Form.Label className="fw-semibold">Confirm Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    required
-                    size="lg"
-                    className="py-3"
-                  />
-                </Form.Group>
+              <Box sx={{ marginBottom: '1.5rem' }}>
+                <TextField
+                  label="Username"
+                  name="username"
+                  type="text"
+                  value={formData.username}
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                  variant="outlined"
+                />
+              </Box>
 
-                <Button 
-                  type="submit" 
-                  variant="success" 
-                  size="lg" 
-                  className="w-100 py-3 fw-bold"
-                  disabled={loading}
+              <Box sx={{ marginBottom: '1.5rem' }}>
+                <TextField
+                  label="Password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                  variant="outlined"
+                  helperText="Password must be at least 6 characters long."
+                />
+              </Box>
+
+              <Box sx={{ marginBottom: '2rem' }}>
+                <TextField
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                  variant="outlined"
+                  error={formData.confirmPassword && formData.password !== formData.confirmPassword}
+                  helperText={formData.confirmPassword && formData.password !== formData.confirmPassword ? 'Passwords do not match' : ''}
+                />
+              </Box>
+
+              <Button
+                type="submit"
+                variant="contained"
+                color="success"
+                size="large"
+                disabled={loading}
+                sx={{
+                  width: '100%',
+                  padding: '12px',
+                  fontSize: '1.1rem',
+                  fontWeight: 'bold',
+                  textTransform: 'none',
+                  borderRadius: '8px'
+                }}
+              >
+                {loading ? 'Creating Account...' : 'Register'}
+              </Button>
+            </Box>
+
+            {/* Login Link */}
+            <Box sx={{ textAlign: 'center', marginTop: '1.5rem' }}>
+              <Typography variant="body2">
+                Already have an account?{' '}
+                <Typography 
+                  component={Link} 
+                  to="/login" 
+                  sx={{ 
+                    color: 'var(--mui-primary-main)', 
+                    textDecoration: 'none',
+                    fontWeight: 'medium',
+                    '&:hover': {
+                      textDecoration: 'underline'
+                    }
+                  }}
                 >
-                  {loading ? 'Creating Account...' : 'Register'}
-                </Button>
-              </Form>
-              
-              <div className="text-center mt-3">
-                <p>Already have an account? <Link to="/login">Login here</Link></p>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+                  Login here
+                </Typography>
+              </Typography>
+            </Box>
+          </CardContent>
+        </Card>
+      </Container>
+    </Box>
   );
 };
 

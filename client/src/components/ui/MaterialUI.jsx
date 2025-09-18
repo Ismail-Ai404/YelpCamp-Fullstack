@@ -25,9 +25,14 @@ export const Typography = ({
   component: Component = 'p', 
   children, 
   className = '',
+  sx = {},
   ...props 
 }) => (
-  <Component className={`mui-typography mui-${variant} ${className}`} {...props}>
+  <Component 
+    className={`mui-typography mui-${variant} ${className}`} 
+    style={sx}
+    {...props}
+  >
     {children}
   </Component>
 );
@@ -37,20 +42,23 @@ export const Button = ({
   variant = 'contained', 
   color = 'primary', 
   size = 'medium',
+  component: Component = 'button',
   startIcon,
   endIcon,
   children, 
   className = '',
+  sx = {},
   ...props 
 }) => (
-  <button 
+  <Component
     className={`mui-button mui-button-${variant} mui-button-${color} mui-button-${size} ${className}`}
+    style={sx}
     {...props}
   >
     {startIcon && <span className="mui-button-icon-start">{startIcon}</span>}
     {children}
     {endIcon && <span className="mui-button-icon-end">{endIcon}</span>}
-  </button>
+  </Component>
 );
 
 // Card
@@ -154,8 +162,8 @@ export const Drawer = ({
 );
 
 // IconButton
-export const IconButton = ({ children, className = '', ...props }) => (
-  <button className={`mui-icon-button ${className}`} {...props}>
+export const IconButton = ({ children, className = '', sx = {}, ...props }) => (
+  <button className={`mui-icon-button ${className}`} style={sx} {...props}>
     {children}
   </button>
 );

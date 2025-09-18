@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Spinner, Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import {
+  Container,
+  Card,
+  CardContent,
+  CardMedia,
+  CardActions,
+  Button,
+  Typography,
+  Box,
+  Grid
+} from '../ui/MaterialUI';
 
 const CampgroundsList = () => {
   const [campgrounds, setCampgrounds] = useState([]);
