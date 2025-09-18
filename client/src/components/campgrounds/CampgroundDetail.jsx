@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Spinner, Alert, Carousel, Badge } from 'react-bootstrap';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
+import {
+  Container,
+  Card,
+  CardContent,
+  Button,
+  Typography,
+  Box,
+  Grid
+} from '../ui/MaterialUI';
 
 const CampgroundDetail = () => {
   const [campground, setCampground] = useState(null);
@@ -46,19 +54,55 @@ const CampgroundDetail = () => {
 
   if (loading) {
     return (
-      <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
-        <Spinner animation="border" role="status" variant="success">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      </Container>
+      <Box 
+        sx={{
+          minHeight: '60vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Box sx={{ textAlign: 'center' }}>
+          <Box 
+            sx={{
+              width: '60px',
+              height: '60px',
+              border: '4px solid var(--mui-success-light)',
+              borderTop: '4px solid var(--mui-success-main)',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+              margin: '0 auto 1rem'
+            }}
+          />
+          <Typography variant="h6" sx={{ color: 'var(--mui-grey-600)' }}>
+            Loading campground...
+          </Typography>
+        </Box>
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <Container className="mt-5">
-        <Alert variant="danger">{error}</Alert>
-        <Button as={Link} to="/campgrounds" variant="secondary">
+      <Container maxWidth="md" sx={{ paddingY: '3rem' }}>
+        <Box 
+          sx={{
+            backgroundColor: 'var(--mui-error-light)',
+            color: 'var(--mui-error-dark)',
+            padding: '2rem',
+            borderRadius: '8px',
+            border: '1px solid var(--mui-error-main)',
+            marginBottom: '1rem'
+          }}
+        >
+          <Typography variant="h6">{error}</Typography>
+        </Box>
+        <Button
+          component={Link}
+          to="/campgrounds"
+          variant="outlined"
+          sx={{ textTransform: 'none' }}
+        >
           Back to Campgrounds
         </Button>
       </Container>
@@ -67,9 +111,25 @@ const CampgroundDetail = () => {
 
   if (!campground) {
     return (
-      <Container className="mt-5">
-        <Alert variant="warning">Campground not found</Alert>
-        <Button as={Link} to="/campgrounds" variant="secondary">
+      <Container maxWidth="md" sx={{ paddingY: '3rem' }}>
+        <Box 
+          sx={{
+            backgroundColor: 'var(--mui-warning-light)',
+            color: 'var(--mui-warning-dark)',
+            padding: '2rem',
+            borderRadius: '8px',
+            border: '1px solid var(--mui-warning-main)',
+            marginBottom: '1rem'
+          }}
+        >
+          <Typography variant="h6">Campground not found</Typography>
+        </Box>
+        <Button
+          component={Link}
+          to="/campgrounds"
+          variant="outlined"
+          sx={{ textTransform: 'none' }}
+        >
           Back to Campgrounds
         </Button>
       </Container>

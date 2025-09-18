@@ -687,3 +687,9 @@
 .mui-elevation-4 { box-shadow: var(--mui-shadow-4); }
 .mui-elevation-6 { box-shadow: var(--mui-shadow-6); }
 .mui-elevation-8 { box-shadow: var(--mui-shadow-8); }
+
+/* Loading Spinner Animation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

@@ -1,107 +1,14 @@
-/* Custom YelpCamp Styles */
+/* Material-UI YelpCamp App Styles */
 html, body, #root, .App {
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .App {
   min-height: 100vh;
   overflow-x: hidden;
-}
-
-/* Enhanced card hover effects */
-.hover-shadow {
-  transition: all 0.3s ease;
-}
-
-.hover-shadow:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
-}
-
-/* Improved button hover effects */
-.btn {
-  transition: all 0.3s ease;
-}
-
-.btn:hover {
-  transform: translateY(-1px);
-}
-
-/* Better text readability */
-.lead {
-  line-height: 1.8;
-}
-
-/* Improved form styling */
-.form-control:focus {
-  border-color: #198754;
-  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
-}
-
-/* Custom navbar improvements */
-.navbar-brand {
-  transition: all 0.3s ease;
-}
-
-.navbar-brand:hover {
-  transform: scale(1.05);
-}
-
-/* Responsive image improvements */
-.carousel-item img {
-  transition: transform 0.3s ease;
-}
-
-.carousel-item:hover img {
-  transform: scale(1.05);
-}
-
-/* Mobile responsiveness improvements */
-@media (max-width: 768px) {
-  .container-fluid {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  
-  .display-1 {
-    font-size: 3rem !important;
-  }
-  
-  .display-4 {
-    font-size: 2.5rem !important;
-  }
-  
-  .display-5 {
-    font-size: 2rem !important;
-  }
-}
-
-/* Desktop improvements */
-@media (min-width: 1200px) {
-  .container-fluid {
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-}
-
-/* Loading spinner improvements */
-.spinner-border {
-  width: 3rem;
-  height: 3rem;
-}
-
-/* Better spacing for large screens */
-@media (min-width: 992px) {
-  .py-5 {
-    padding-top: 5rem !important;
-    padding-bottom: 5rem !important;
-  }
-}
-
-/* Full-screen home page */
-.home-hero {
-  margin: 0 !important;
-  padding: 0 !important;
+  font-family: var(--mui-font-family);
 }
 
 /* Prevent horizontal scroll */
@@ -111,4 +18,10 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+/* Responsive image improvements */
+img {
+  max-width: 100%;
+  height: auto;
 }
