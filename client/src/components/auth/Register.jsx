@@ -66,12 +66,12 @@ const Register = () => {
         display: 'flex',
         alignItems: 'center',
         backgroundColor: '#f5f5f5',
-        padding: { xs: '1rem', sm: '2rem' }
+        padding: { xs: '1.5rem', sm: '2rem', md: '3rem' }
       }}
     >
       <Container maxWidth="sm">
         <Card sx={{ boxShadow: '0 8px 32px rgba(0,0,0,0.1)', borderRadius: '12px' }}>
-          <CardContent sx={{ padding: { xs: '2rem', sm: '3rem' } }}>
+          <CardContent sx={{ padding: { xs: '2rem', sm: '3rem', md: '4rem' } }}>
             {/* Header */}
             <Box sx={{ textAlign: 'center', marginBottom: '2rem' }}>
               <Typography 

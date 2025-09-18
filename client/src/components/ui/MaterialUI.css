@@ -1,10 +1,15 @@
 /* Material-UI-like CSS Styles */
 :root {
-  /* Primary Colors */
-  --mui-primary-main: #1976d2;
-  --mui-primary-light: #42a5f5;
-  --mui-primary-dark: #1565c0;
+  /* Primary Colors - Updated to a more modern green/teal scheme */
+  --mui-primary-main: #2e7d32;
+  --mui-primary-light: #4caf50;
+  --mui-primary-dark: #1b5e20;
   --mui-primary-contrast: #ffffff;
+  
+  /* Navbar specific colors */
+  --mui-navbar-bg: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+  --mui-navbar-text: #ffffff;
+  --mui-navbar-hover: rgba(255, 255, 255, 0.1);
   
   /* Secondary Colors */
   --mui-secondary-main: #dc004e;
@@ -147,9 +152,10 @@
   width: 100%;
   box-sizing: border-box;
   flex-shrink: 0;
-  background-color: var(--mui-primary-main);
-  color: var(--mui-primary-contrast);
-  box-shadow: var(--mui-shadow-4);
+  background: var(--mui-navbar-bg);
+  color: var(--mui-navbar-text);
+  box-shadow: 0 2px 20px rgba(46, 125, 50, 0.3);
+  backdrop-filter: blur(10px);
 }
 
 .mui-appbar-fixed {
@@ -171,13 +177,19 @@
   display: flex;
   align-items: center;
   padding: 0 16px;
-  min-height: 56px;
+  min-height: 64px;
 }
 
 @media (min-width: 600px) {
   .mui-toolbar {
-    min-height: 64px;
-    padding: 0 24px;
+    min-height: 72px;
+    padding: 0 32px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .mui-toolbar {
+    padding: 0 48px;
   }
 }
 

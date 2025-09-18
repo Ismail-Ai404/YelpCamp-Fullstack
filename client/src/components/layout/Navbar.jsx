@@ -31,8 +31,7 @@ const Navigation = () => {
   };
 
   const navLinks = [
-    { to: '/campgrounds', text: 'Campgrounds', icon: 'fas fa-mountain' },
-    ...(user ? [{ to: '/campgrounds/new', text: 'New Campground', icon: 'fas fa-plus' }] : [])
+    { to: '/campgrounds', text: 'Campgrounds', icon: 'fas fa-mountain' }
   ];
 
   const renderNavLinks = (mobile = false) => (
@@ -133,26 +132,58 @@ const Navigation = () => {
               to="/"
               sx={{
                 flexGrow: { xs: 1, md: 0 },
-                fontWeight: 700,
-                fontSize: { xs: '1.4rem', sm: '1.6rem' },
+                fontWeight: 800,
+                fontSize: { xs: '1.4rem', sm: '1.7rem', md: '1.8rem' },
                 color: 'white',
                 textDecoration: 'none',
                 display: 'flex',
                 alignItems: 'center',
-                marginRight: { md: '32px' },
+                marginRight: { md: '48px' },
+                transition: 'all 0.3s ease',
                 '&:hover': {
-                  color: 'rgba(255,255,255,0.8)'
+                  color: 'rgba(255,255,255,0.9)',
+                  transform: 'scale(1.02)'
                 }
               }}
             >
-              <i className="fas fa-campground me-2" style={{ fontSize: '1.4rem' }}></i>
-              YelpCamp
+              <i className="fas fa-campground" style={{ fontSize: '1.6rem', marginRight: '12px', color: '#81c784' }}></i>
+              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>YelpCamp</Box>
+              <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>Yelp-Camp</Box>
             </Typography>
 
             {/* Desktop Navigation */}
             <Box sx={{ display: { xs: 'none', md: 'flex' }, flexGrow: 1, alignItems: 'center' }}>
               {renderNavLinks()}
             </Box>
+
+            {/* Add New Campground Button (Desktop - Logged in users only) */}
+            {user && (
+              <Box sx={{ display: { xs: 'none', md: 'block' }, marginRight: '24px' }}>
+                <Button
+                  component={Link}
+                  to="/campgrounds/new"
+                  variant="contained"
+                  sx={{
+                    backgroundColor: 'rgba(255,255,255,0.15)',
+                    color: 'white',
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    borderRadius: '25px',
+                    padding: '10px 20px',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255,255,255,0.25)',
+                      transform: 'translateY(-1px)',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                    },
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <i className="fas fa-plus" style={{ marginRight: '8px', fontSize: '0.9rem' }}></i>
+                  Add Campground
+                </Button>
+              </Box>
+            )}
 
             {/* Desktop Auth Section */}
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
@@ -192,6 +223,29 @@ const Navigation = () => {
           </Typography>
           
           {renderNavLinks(true)}
+          
+          {/* Add New Campground Button (Mobile - Logged in users only) */}
+          {user && (
+            <Box sx={{ marginTop: '24px' }}>
+              <Button
+                component={Link}
+                to="/campgrounds/new"
+                variant="contained"
+                color="success"
+                onClick={handleDrawerClose}
+                sx={{
+                  width: '100%',
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  padding: '12px 16px',
+                  borderRadius: '8px'
+                }}
+              >
+                <i className="fas fa-plus" style={{ marginRight: '8px' }}></i>
+                Add New Campground
+              </Button>
+            </Box>
+          )}
           
           <Box sx={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid #e0e0e0' }}>
             {renderAuthSection(true)}

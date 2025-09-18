@@ -24,7 +24,7 @@ const Home = () => {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         color: 'white',
-        padding: { xs: '2rem 1rem', sm: '3rem 2rem' },
+        padding: { xs: '2rem 1rem', sm: '4rem 2rem', md: '6rem 3rem' },
         textAlign: 'center'
       }}
     >
@@ -68,10 +68,10 @@ const Home = () => {
             sx={{ 
               display: 'flex',
               flexDirection: { xs: 'column', sm: 'row' },
-              gap: '1.5rem',
+              gap: { xs: '1rem', sm: '1.5rem' },
               justifyContent: 'center',
               alignItems: 'center',
-              marginBottom: '4rem'
+              marginBottom: { xs: '3rem', sm: '4rem', md: '5rem' }
             }}
           >
             {user ? (
@@ -154,7 +154,7 @@ const Home = () => {
           </Box>
 
           {/* Feature Icons */}
-          <Grid container spacing={4} sx={{ justifyContent: 'center', marginTop: '2rem' }}>
+          <Grid container spacing={{ xs: 2, sm: 3, md: 4 }} sx={{ justifyContent: 'center', marginTop: { xs: '2rem', sm: '3rem' }, maxWidth: '600px', margin: { xs: '2rem auto 0', sm: '3rem auto 0' } }}>
             <Grid item xs={4} sm={3} md={2}>
               <Box sx={{ textAlign: 'center' }}>
                 <i 
