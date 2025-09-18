@@ -1,7 +1,16 @@
-import React from 'react';
-import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  Drawer,
+  Container,
+  Box
+} from '../ui/MaterialUI';
 
 const Navigation = () => {
   const { user, logout } = useAuth();
